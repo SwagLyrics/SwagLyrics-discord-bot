@@ -16,14 +16,21 @@ def get_spotify_data(user):
 
 @bot.command(name='swaglyrics')
 async def get_lyrics(ctx):
-    song, artist = get_spotify_data(ctx.author)
-    lyrics = swaglyrics.get_lyrics(song, artist)
-    splitted_lyrics = chop_string_into_chunks(lyrics, 1024)
-    embed = discord.Embed()
-    embed.title = "Lyrics for {} - {}".format(song, artist)
-    for chunk in splitted_lyrics:
-        embed.add_field(name=u"\u200C", value=chunk, inline=False)
-    await ctx.send(embed=embed)
+    try:
+        song, artist = get_spotify_data(ctx.author)
+        lyrics = swaglyrics.get_lyrics(song, artist)
+        splitted_lyrics = chop_string_into_chunks(lyrics, 1024)
+        embed = discord.Embed()
+        embed.title = "Lyrics for {} - {}".format(song, artist)
+        for chunk in splitted_lyrics:
+            embed.add_field(name=u"\u200C", value=chunk, inline=False)
+        await ctx.send(embed=embed)
+    except AttributeError:
+        await ctx.send("You are not listening to anything or Spotify is not connected to discord! \n "
+                       "Make sure you have enabled status in Settings -> Connections -> Spotify -> Display "
+                       "Spotify as your status")
+    except TypeError:
+        await ctx.send("Lyrics for {} - {} not found.".format(song, artist))
 
 
 def chop_string_into_chunks(string, chunk_size):
