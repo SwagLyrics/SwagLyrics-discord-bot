@@ -5,8 +5,6 @@ import env_file
 from discord.ext import commands
 from swaglyrics import cli as swaglyrics
 
-from text2png import text2png
-
 bot = commands.Bot(command_prefix="$")
 
 
