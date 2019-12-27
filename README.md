@@ -3,7 +3,7 @@ A implementation of swaglyrics into discord bot
 
 # Usage
 
-Simply type $swaglyrics and let the magic happens!
+Simply type `$swaglyrics` and let the magic happens!
 
 # Restrictions
 
