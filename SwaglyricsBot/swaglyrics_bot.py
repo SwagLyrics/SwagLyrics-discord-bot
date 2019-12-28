@@ -5,8 +5,6 @@ import env_file
 from discord.ext import commands
 from swaglyrics import cli as swaglyrics
 
-from text2png import text2png
-
 bot = commands.Bot(command_prefix="$")
 
 
@@ -54,5 +52,6 @@ def remove_titles(lyrics, titles):
     return lyrics
 
 
-token = env_file.get()
-bot.run(token["BOT_TOKEN"])
+def run():
+    token = env_file.get()
+    bot.run(token["BOT_TOKEN"])
