@@ -4,6 +4,7 @@ import discord
 import env_file
 from discord import Spotify
 from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 from discord.ext.commands.help import MinimalHelpCommand
 from swaglyrics import cli as swaglyrics
 from SwaglyricsBot import LyricsNotFound, SpotifyClosed, LyricsError
@@ -24,7 +25,7 @@ async def get_lyrics_command(ctx, song=None, artist=None):
         if song is None and artist is None:
             song, artist = get_spotify_data(ctx.author)
         debug_string = "Getting lyrics for {} - {}".format(song, artist)
-        print(debug_string)
+        print("User: {}".format(ctx.author), debug_string)
         await ctx.send(debug_string)
         lyrics = get_lyrics(song, artist)
         splitted_lyrics = chop_string_into_chunks(lyrics, 1024)
@@ -65,12 +66,18 @@ def remove_titles(lyrics, titles):
     return lyrics
 
 
+@bot.event
 async def on_ready():
     print("Bot is up and running. Waiting for actions.")
 
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, CommandNotFound):
+        await ctx.send("{}. Use $help for commands.".format(error))
+
+
 def run():
     token = env_file.get()
-    bot.add_listener(on_ready)
     bot.run(token["BOT_TOKEN"])
 
