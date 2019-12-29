@@ -2,20 +2,26 @@ import re
 
 import discord
 import env_file
+from discord import Spotify
 from discord.ext import commands
+from discord.ext.commands.help import MinimalHelpCommand
 from swaglyrics import cli as swaglyrics
 
-bot = commands.Bot(command_prefix="$")
+bot = commands.Bot(command_prefix="$", help_command=MinimalHelpCommand())
 
 
 def get_spotify_data(user):
-    return user.activity.title, user.activity.artist
+    spotify_activity = [activity for activity in user.activities if isinstance(activity, Spotify)]
+    if len(spotify_activity) == 0:
+        raise AttributeError
+    return spotify_activity[0].title, spotify_activity[0].artist
 
 
 @bot.command(name='swaglyrics')
-async def get_lyrics(ctx):
+async def get_lyrics(ctx, song=None, artist=None):
     try:
-        song, artist = get_spotify_data(ctx.author)
+        if song is None and artist is None:
+            song, artist = get_spotify_data(ctx.author)
         debug_string = "Getting lyrics for {} - {}".format(song, artist)
         print(debug_string)
         await ctx.send(debug_string)
@@ -63,3 +69,4 @@ def run():
     token = env_file.get()
     bot.add_listener(on_ready)
     bot.run(token["BOT_TOKEN"])
+
