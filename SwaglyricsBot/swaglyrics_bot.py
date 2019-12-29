@@ -9,13 +9,16 @@ bot = commands.Bot(command_prefix="$")
 
 
 def get_spotify_data(user):
-    return user.activity.artist, user.activity.title
+    return user.activity.title, user.activity.artist
 
 
 @bot.command(name='swaglyrics')
 async def get_lyrics(ctx):
     try:
         song, artist = get_spotify_data(ctx.author)
+        debug_string = "Getting lyrics for {} - {}".format(song, artist)
+        print(debug_string)
+        await ctx.send(debug_string)
         lyrics = swaglyrics.get_lyrics(song, artist)
         splitted_lyrics = chop_string_into_chunks(lyrics, 1024)
         embed = discord.Embed()
@@ -28,7 +31,7 @@ async def get_lyrics(ctx):
                        "Make sure you have enabled status in Settings -> Connections -> Spotify -> Display "
                        "Spotify as your status")
     except TypeError:
-        await ctx.send("Lyrics for {} - {} not found.".format(song, artist))
+        await ctx.send("Lyrics for {} - {} not found in genius database.".format(song, artist))
 
 
 def chop_string_into_chunks(string, chunk_size):
@@ -52,6 +55,11 @@ def remove_titles(lyrics, titles):
     return lyrics
 
 
+async def on_ready():
+    print("Bot is up and running. Waiting for actions.")
+
+
 def run():
     token = env_file.get()
+    bot.add_listener(on_ready)
     bot.run(token["BOT_TOKEN"])
