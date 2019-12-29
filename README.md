@@ -11,4 +11,4 @@ If you want add it to server, you need to create `.env` file and type in `BOT_TO
 
 # Restrictions
 
-Spotify needs to be connected with discord, status in "Settings -> Connections -> Spotify -> Display Spotify as your status" needs to be turned on and for now, you can't have anything that overlays status (ex. Playing game which does that)
+Spotify needs to be connected with discord, status in "Settings -> Connections -> Spotify -> Display Spotify as your status" needs to be turned on.
