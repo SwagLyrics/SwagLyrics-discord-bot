@@ -13,6 +13,9 @@ bot = commands.Bot(command_prefix="$", help_command=MinimalHelpCommand())
 
 
 def get_spotify_data(user):
+    """
+    Reads data from discord spotify activity.
+    """
     spotify_activity = [activity for activity in user.activities if isinstance(activity, Spotify)]
     if len(spotify_activity) == 0:
         raise SpotifyClosed()
@@ -21,6 +24,10 @@ def get_spotify_data(user):
 
 @bot.command(name='swaglyrics')
 async def get_lyrics_command(ctx, song=None, artist=None):
+    """
+    Main command, get's lyrics, chops it into pieces and generates embed,
+    that will be sent to discord.
+    """
     try:
         if song is None and artist is None:
             song, artist = get_spotify_data(ctx.author)
@@ -46,6 +53,11 @@ def get_lyrics(song, artist):
 
 
 def chop_string_into_chunks(string, chunk_size):
+    """
+    Chops lyrics into chunks no longer thank 1024 characters.
+    Discord embed section can't be longer than that.
+    To avoid breaks mid word, it chops to first gap between lyrics sections
+    """
     chunk = ""
     chunks = list()
     last_char = None
