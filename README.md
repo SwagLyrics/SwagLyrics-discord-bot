@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/flabbet/Swaglyrics-discord-bot.svg?branch=master)](https://travis-ci.com/flabbet/Swaglyrics-discord-bot)
+
 # Swaglyrics-discord-bot
 A implementation of swaglyrics into discord bot. When you listen to music on spotify, this bot will print you the lyrics. All automatic!
 
