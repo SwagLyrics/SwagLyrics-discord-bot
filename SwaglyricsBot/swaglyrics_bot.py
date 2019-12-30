@@ -59,13 +59,6 @@ def chop_string_into_chunks(string, chunk_size):
     return chunks
 
 
-def remove_titles(lyrics, titles):
-    titles = re.findall(r'\[(.*)\]', lyrics)
-    for title in titles:
-        lyrics = lyrics.replace("[{}]".format(title), "")
-    return lyrics
-
-
 @bot.event
 async def on_ready():
     print("Bot is up and running. Waiting for actions.")
