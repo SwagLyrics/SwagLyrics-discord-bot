@@ -9,5 +9,6 @@ install:
   - pip3 install -r requirements.txt
   - pip3 install .
 script:
-  - python3 test/test_bot.py
+  - cd tests
+  - pytest --cov-config=.coveragerc --cov=SwaglyricsBot test_bot.py
   - codecov
