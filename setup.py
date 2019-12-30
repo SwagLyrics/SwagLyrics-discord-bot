@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="PyBugger",
+    name="SwaglyricsBot",
     version=SwaglyricsBot.__version__,
     author="Krzysztof Krysiński",
     author_email="krysinskikrzysztof123@gmail.com",

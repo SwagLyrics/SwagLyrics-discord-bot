@@ -7,5 +7,6 @@ python:
   - "nightly"
 install:
   - pip3 install -r requirements.txt
+  - pip3 install .
 script:
   - python3 test/test_bot.py
