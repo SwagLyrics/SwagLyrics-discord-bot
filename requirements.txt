@@ -5,7 +5,9 @@ beautifulsoup4==4.8.1
 certifi==2019.11.28
 chardet==3.0.4
 Click==7.0
+codecov==2.0.15
 colorama==0.4.1
+coverage==5.0.1
 discord==1.0.1
 discord.py==1.2.5
 env-file==2019.4.13
