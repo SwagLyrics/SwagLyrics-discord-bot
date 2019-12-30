@@ -30,7 +30,6 @@ requests==2.22.0
 six==1.13.0
 soupsieve==1.9.5
 swaglyrics==1.1.1
-SwaglyricsBot==0.0.1
 SwSpotify==1.1.1
 Unidecode==1.1.1
 urllib3==1.25.7
