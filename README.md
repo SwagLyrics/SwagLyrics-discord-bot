@@ -4,6 +4,7 @@ A implementation of swaglyrics into discord bot. When you listen to music on spo
 # Usage
 
 Simply type `$swaglyrics` and let the magic happens!
+
 For specified lyrics, type `$swaglyrics <song> <artist>`
 
 # Restrictions
