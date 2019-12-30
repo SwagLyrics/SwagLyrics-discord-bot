@@ -1,8 +1,6 @@
 import unittest
 
-from discord import User
-
-from SwaglyricsBot import swaglyrics_bot, LyricsNotFound, SpotifyClosed
+from SwaglyricsBot import swaglyrics_bot
 
 
 class BotTests(unittest.TestCase):
