@@ -8,4 +8,4 @@ python:
 install:
   - pip3 install -r requirements.txt
 script:
-  -python3 test_bot.py
+  -python3 test/test_bot.py
