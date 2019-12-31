@@ -31,13 +31,13 @@ async def get_lyrics_command(ctx, song=None, artist=None):
     try:
         if song is None and artist is None:
             song, artist = get_spotify_data(ctx.author)
-        debug_string = "Getting lyrics for {} - {}".format(song, artist)
+        debug_string = "Getting lyrics for {} by {}".format(song, artist)
         print("User: {}".format(ctx.author), debug_string)
         await ctx.send(debug_string)
         lyrics = get_lyrics(song, artist)
         splitted_lyrics = chop_string_into_chunks(lyrics, 1024)
         embed = discord.Embed()
-        embed.title = "Lyrics for {} - {}".format(song, artist)
+        embed.title = "{} by {}".format(song, artist)
         for chunk in splitted_lyrics:
             embed.add_field(name=u"\u200C", value=chunk, inline=False)
         await ctx.send(embed=embed)
