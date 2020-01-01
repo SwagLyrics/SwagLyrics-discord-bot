@@ -79,6 +79,11 @@ All up in the gutter"""
         lyrics = swaglyrics_bot.get_lyrics("Wonderful", "Caravan Palace")
         self.assertEqual(lyrics, self.testing_lyrics)
 
+    def test_that_artists_list_converts_to_string(self):
+        self.assertEqual("Eminem", swaglyrics_bot.artists_to_string(["Eminem"]))
+        self.assertEqual("Eminem, 50 Cent", swaglyrics_bot.artists_to_string(["Eminem", "50 Cent"]))
+        self.assertEqual("", swaglyrics_bot.artists_to_string(""))
+
 
 if __name__ == '__main__':
     unittest.main()

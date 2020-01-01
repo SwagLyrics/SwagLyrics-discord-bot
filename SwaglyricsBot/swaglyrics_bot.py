@@ -19,30 +19,49 @@ def get_spotify_data(user):
     spotify_activity = [activity for activity in user.activities if isinstance(activity, Spotify)]
     if len(spotify_activity) == 0:
         raise SpotifyClosed()
-    return spotify_activity[0].title, spotify_activity[0].artist
+    return spotify_activity[0].title, spotify_activity[0].artists
 
 
 @bot.command(name='swaglyrics')
-async def get_lyrics_command(ctx, song=None, artist=None):
+async def get_lyrics_command(ctx, song=None, artists=None):
     """
     Main command, get's lyrics, chops it into pieces and generates embed,
     that will be sent to discord.
     """
     try:
-        if song is None and artist is None:
-            song, artist = get_spotify_data(ctx.author)
-        debug_string = "Getting lyrics for {} by {}".format(song, artist)
+        if song is None and artists is None:
+            song, artists = get_spotify_data(ctx.author)
+        else:
+            tmp = artists
+            artists = list()
+            artists.append(tmp)
+        artists_string = artists_to_string(artists)
+        debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
         print("User: {}".format(ctx.author), debug_string)
         await ctx.send(debug_string)
-        lyrics = get_lyrics(song, artist)
+        lyrics = get_lyrics(song, artists[0])
         splitted_lyrics = chop_string_into_chunks(lyrics, 1024)
         embed = discord.Embed()
-        embed.title = "{} by {}".format(song, artist)
+        embed.title = "{} by {}".format(song, artists_string)
         for chunk in splitted_lyrics:
             embed.add_field(name=u"\u200C", value=chunk, inline=False)
         await ctx.send(embed=embed)
     except LyricsError as ex:
         await ctx.send(ex)
+
+
+def artists_to_string(artists):
+    """
+    List of artists into human friendly string
+    """
+    if len(artists) == 0:
+        return ""
+    str1 = artists[0]
+    for artist in artists:
+        if artist == str1:
+            continue
+        str1 += ", " + artist
+    return str1
 
 
 def get_lyrics(song, artist):
@@ -85,4 +104,3 @@ async def on_command_error(ctx, error):
 def run():
     token = env_file.get()
     bot.run(token["BOT_TOKEN"])
-
