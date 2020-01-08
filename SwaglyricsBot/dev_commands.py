@@ -18,7 +18,7 @@ class DevCommands(commands.Cog):
         process = psutil.Process(os.getpid())
         embed = discord.Embed(
             title="Bot Stats",
-            description="Running on a Raspberry Pi with 1GB of RAM.")
+            description="Running on a dedicated server with 1GB of RAM.")
         embed.add_field(name="**__General Info__**", inline=False, value="\u200b")
         embed.add_field(
             name="Owner",
