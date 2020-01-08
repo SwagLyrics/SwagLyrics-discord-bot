@@ -1,5 +1,3 @@
-import re
-
 import discord
 import env_file
 from discord import Spotify
@@ -7,7 +5,9 @@ from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 from discord.ext.commands.help import MinimalHelpCommand
 from swaglyrics import cli as swaglyrics
+
 from SwaglyricsBot import LyricsNotFound, SpotifyClosed, LyricsError
+from SwaglyricsBot.dev_commands import DevCommands
 
 bot = commands.Bot(command_prefix="$", help_command=MinimalHelpCommand())
 
@@ -22,7 +22,12 @@ def get_spotify_data(user):
     return spotify_activity[0].title, spotify_activity[0].artists
 
 
-@bot.command(name='swaglyrics')
+@bot.command(name="ping")
+async def ping(ctx):
+    await ctx.send(f"Pong {bot.latency * 1000:.03f} ms")
+
+
+@bot.command(name="swaglyrics")
 async def get_lyrics_command(ctx, song=None, artists=None):
     """
     Main command, get's lyrics, chops it into pieces and generates embed,
@@ -103,4 +108,5 @@ async def on_command_error(ctx, error):
 
 def run():
     token = env_file.get()
+    bot.add_cog(DevCommands(bot))
     bot.run(token["BOT_TOKEN"])

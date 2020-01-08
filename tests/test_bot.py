@@ -1,6 +1,8 @@
+import asyncio
 import unittest
 
-from SwaglyricsBot import swaglyrics_bot
+from SwaglyricsBot import swaglyrics_bot, LyricsNotFound
+from SwaglyricsBot.swaglyrics_bot import get_lyrics
 
 
 class BotTests(unittest.TestCase):
@@ -75,7 +77,7 @@ All up in the gutter"""
         for chunk in chunks:
             self.assertTrue(len(chunk) <= 1024)
 
-    def test_that_lyrics_is_correct(self):
+    async def test_01that_lyrics_is_correct(self):
         lyrics = swaglyrics_bot.get_lyrics("Wonderful", "Caravan Palace")
         self.assertEqual(lyrics, self.testing_lyrics)
 
@@ -83,6 +85,10 @@ All up in the gutter"""
         self.assertEqual("Eminem", swaglyrics_bot.artists_to_string(["Eminem"]))
         self.assertEqual("Eminem, 50 Cent", swaglyrics_bot.artists_to_string(["Eminem", "50 Cent"]))
         self.assertEqual("", swaglyrics_bot.artists_to_string(""))
+
+    async def test_that_raises_lyrics_not_found(self):
+        with self.assertRaises(LyricsNotFound):
+            asyncio.create_task(get_lyrics("!@#52sdakjc", "(*&d78a kj"))
 
 
 if __name__ == '__main__':
