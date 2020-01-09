@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/SwagLyrics/SwagLyrics-discord-bot.svg?branch=master)](https://travis-ci.com/SwagLyrics/SwagLyrics-discord-bot)
 [![codecov](https://codecov.io/gh/SwagLyrics/Swaglyrics-discord-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/SwagLyrics/Swaglyrics-discord-bot)
 
+
 # Swaglyrics-discord-bot
 A implementation of swaglyrics into discord bot. When you listen to music on spotify, this bot will print you the lyrics. All automatic!
 
@@ -11,6 +12,8 @@ Simply type `$swaglyrics` and let the magic happens!
 
 For specified lyrics, type `$swaglyrics <song> <artist>`
 
-# Restrictions
+![Bot in action screenshot](https://raw.githubusercontent.com/SwagLyrics/SwagLyrics-discord-bot/master/Bot_in_action.png)
+
+# Requirements
 
 Spotify needs to be connected with discord, status in "Settings -> Connections -> Spotify -> Display Spotify as your status" needs to be turned on.
