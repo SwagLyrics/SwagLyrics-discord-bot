@@ -4,11 +4,11 @@
 
 
 # Swaglyrics-discord-bot
-A implementation of swaglyrics into discord bot. When you listen to music on spotify, this bot will print you the lyrics. All automatic!
+An implementation of swaglyrics into a discord bot. When you listen to music on spotify, this bot will print you the lyrics. All automatic!
 
 # Usage
 
-Simply type `$swaglyrics` and let the magic happens!
+Simply type `$swaglyrics` and let the magic happen!
 
 For specified lyrics, type `$swaglyrics <song> <artist>`
 
