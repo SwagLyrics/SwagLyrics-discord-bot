@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/SwagLyrics/Swaglyrics-discord-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/SwagLyrics/Swaglyrics-discord-bot)
 
 
-# Swaglyrics-discord-bot
+# SwagLyrics-discord-bot
 An implementation of swaglyrics into a discord bot. When you listen to music on spotify, this bot will print you the lyrics. All automatic!
 
 # Usage
