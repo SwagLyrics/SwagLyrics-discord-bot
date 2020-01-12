@@ -78,7 +78,7 @@ def get_lyrics(song, artist):
 
 def chop_string_into_chunks(string, chunk_size):
     """
-    Chops lyrics into chunks no longer thank 1024 characters.
+    Chops lyrics into chunks no longer than 1024 characters.
     Discord embed section can't be longer than that.
     To avoid breaks mid word, it chops to first gap between lyrics sections
     """
@@ -86,7 +86,7 @@ def chop_string_into_chunks(string, chunk_size):
     chunks = list()
     last_char = None
     for char in string:
-        if len(chunk) + 50 > chunk_size and char == "\n" or last_char == "\n" and char == "\n":
+        if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
             chunks.append(chunk)
             chunk = ""
         chunk += char

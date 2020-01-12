@@ -71,9 +71,48 @@ All up in the gut-, all up in the gut-
 I got all up in, all up in, all up in, all up in the gutter
 All up in the gut-, all up in the gut-
 All up in the gutter"""
+    testing_lyrics_2 = """
+    [Intro]
+Father, I stretch
+Stretch my hands to You
+
+[Verse]
+Lifelike, this is what your life like, try to live your life right
+People really know you, push your buttons like typewrite
+This is like a movie, but it's really very lifelike
+Every single night, right, every single fight, right?
+I was looking at the 'Gram and I don't even like likes
+I was screamin' at my dad, he told me, "It ain't Christ-like"
+I was screamin' at the referee just like Mike
+Lookin' for a bright light, Sigel, what your life like
+Riding on a white bike, feeling like Excitebike (Stretch my hands to You)
+Pressin' on the gas, supernova for a night light
+Screamin' at my dad and he told me, "It ain't Christ-like"
+But nobody never tell you when you're being like Christ
+Only ever seein' me only when they needin' me
+Like if Tyler Perry made a movie for BET
+Searchin' for a deity, now you wanna see it free
+Now you wanna see if we, let's just see if three apiece
+Tell me what your life like, turn it down, a bright light
+Drivin' with my dad, and he told me, "It ain't Christ-like" (Stretch my hands to You)
+I'm just tryna find, l've been lookin' for a new way
+I'm just really tryin' not to really do the fool way
+I don't have a cool way, bein' on my best, though
+Block 'em on the text though, nothin' else next though
+Not another word, letter, picture, or a decimal (Father, I stretch)
+Wrestlin' with God, I don't really want to wrestle
+Man, it's really lifelike, everything in my life (Stretch my hands to You)
+Arguing with my dad, and he said, "It ain't Christ-like"
+"""
 
     def test_that_lyrics_chunks_does_not_exceed_1024_chars(self):
         chunks = swaglyrics_bot.chop_string_into_chunks(self.testing_lyrics, 1024)
+        for chunk in chunks:
+            print(len(chunk))
+            self.assertTrue(len(chunk) <= 1024)
+
+    def test_that_chopped_lyrics_with_long_chunk_does_not_exceed_1024_chars(self):
+        chunks = swaglyrics_bot.chop_string_into_chunks(self.testing_lyrics_2, 1024)
         for chunk in chunks:
             self.assertTrue(len(chunk) <= 1024)
 
