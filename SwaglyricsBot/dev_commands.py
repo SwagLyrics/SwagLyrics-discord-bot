@@ -7,7 +7,7 @@ import psutil as psutil
 from discord.ext import commands
 
 
-class DevCommands(commands.Cog):
+class DevCommands(commands.Cog, name="Dev"):
 
     def __init__(self, bot):
         self.bot = bot
