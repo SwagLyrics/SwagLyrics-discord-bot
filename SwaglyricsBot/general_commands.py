@@ -1,5 +1,5 @@
 import discord
-import swaglyrics
+import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
 from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError
