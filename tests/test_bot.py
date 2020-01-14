@@ -3,7 +3,7 @@ import unittest
 
 from SwaglyricsBot.general_commands import GeneralCommands
 
-from SwaglyricsBot import swaglyrics_bot, LyricsNotFound
+from SwaglyricsBot import LyricsNotFound
 
 
 class BotTests(unittest.TestCase):
