@@ -10,7 +10,8 @@ class GeneralCommands(commands.Cog, name="General"):
     def __init__(self, bot):
         self.bot = bot
 
-    def get_spotify_data(self, user):
+    @staticmethod
+    def get_spotify_data(user):
         """
         Reads data from discord spotify activity.
         """
@@ -50,7 +51,8 @@ class GeneralCommands(commands.Cog, name="General"):
         except LyricsError as ex:
             await ctx.send(ex)
 
-    def artists_to_string(self, artists):
+    @staticmethod
+    def artists_to_string(artists):
         """
         List of artists into human friendly string
         """
@@ -63,13 +65,15 @@ class GeneralCommands(commands.Cog, name="General"):
             str1 += ", " + artist
         return str1
 
-    def get_lyrics(self, song, artist):
+    @staticmethod
+    def get_lyrics(song, artist):
         lyrics = swaglyrics.get_lyrics(song, artist)
         if lyrics is None:
             raise LyricsNotFound("Lyrics for {} - {} not found in genius database.".format(song, artist))
         return lyrics
 
-    def chop_string_into_chunks(self, string, chunk_size):
+    @staticmethod
+    def chop_string_into_chunks(string, chunk_size):
         """
         Chops lyrics into chunks no longer than 1024 characters.
         Discord embed section can't be longer than that.

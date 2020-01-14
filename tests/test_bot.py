@@ -1,8 +1,9 @@
 import asyncio
 import unittest
 
+from SwaglyricsBot.general_commands import GeneralCommands
+
 from SwaglyricsBot import swaglyrics_bot, LyricsNotFound
-from SwaglyricsBot.swaglyrics_bot import get_lyrics
 
 
 class BotTests(unittest.TestCase):
@@ -106,28 +107,28 @@ Arguing with my dad, and he said, "It ain't Christ-like"
 """
 
     def test_that_lyrics_chunks_does_not_exceed_1024_chars(self):
-        chunks = swaglyrics_bot.chop_string_into_chunks(self.testing_lyrics, 1024)
+        chunks = GeneralCommands.chop_string_into_chunks(self.testing_lyrics, 1024)
         for chunk in chunks:
             print(len(chunk))
             self.assertTrue(len(chunk) <= 1024)
 
     def test_that_chopped_lyrics_with_long_chunk_does_not_exceed_1024_chars(self):
-        chunks = swaglyrics_bot.chop_string_into_chunks(self.testing_lyrics_2, 1024)
+        chunks = GeneralCommands.chop_string_into_chunks(self.testing_lyrics_2, 1024)
         for chunk in chunks:
             self.assertTrue(len(chunk) <= 1024)
 
     async def test_01that_lyrics_is_correct(self):
-        lyrics = swaglyrics_bot.get_lyrics("Wonderful", "Caravan Palace")
+        lyrics = GeneralCommands.get_lyrics("Wonderful", "Caravan Palace")
         self.assertEqual(lyrics, self.testing_lyrics)
 
     def test_that_artists_list_converts_to_string(self):
-        self.assertEqual("Eminem", swaglyrics_bot.artists_to_string(["Eminem"]))
-        self.assertEqual("Eminem, 50 Cent", swaglyrics_bot.artists_to_string(["Eminem", "50 Cent"]))
-        self.assertEqual("", swaglyrics_bot.artists_to_string(""))
+        self.assertEqual("Eminem", GeneralCommands.artists_to_string(["Eminem"]))
+        self.assertEqual("Eminem, 50 Cent", GeneralCommands.artists_to_string(["Eminem", "50 Cent"]))
+        self.assertEqual("", GeneralCommands.artists_to_string(""))
 
     async def test_that_raises_lyrics_not_found(self):
         with self.assertRaises(LyricsNotFound):
-            asyncio.create_task(get_lyrics("!@#52sdakjc", "(*&d78a kj"))
+            asyncio.create_task(GeneralCommands.get_lyrics("(*&d78a kj"))
 
 
 if __name__ == '__main__':
