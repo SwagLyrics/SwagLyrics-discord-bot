@@ -9,7 +9,7 @@ setuptools.setup(
     version=SwaglyricsBot.__version__,
     author="Krzysztof Krysiński",
     author_email="krysinskikrzysztof123@gmail.com",
-    description="Debug python functions without leaving python.",
+    description="A automatic lyrics fetching discord bot.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/flabbet/Swaglyrics-discord-bot",
