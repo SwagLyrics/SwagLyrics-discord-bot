@@ -1,4 +1,5 @@
 [![inviteme](https://img.shields.io/static/v1?style=flat&logo=discord&logoColor=FFF&label=&message=invite%20me&color=7289DA)](https://top.gg/bot/660170175517032448)
+[![Discord Server](https://badgen.net/badge/discord/join%20chat/7289DA?icon=discord)](https://discord.gg/DSUZGK4)
 [![Discord Bots](https://top.gg/api/widget/status/660170175517032448.svg)](https://top.gg/bot/660170175517032448)
 [![Discord Bots](https://top.gg/api/widget/servers/660170175517032448.svg)](https://top.gg/bot/660170175517032448)
 [![Build Status](https://travis-ci.com/SwagLyrics/SwagLyrics-discord-bot.svg?branch=master)](https://travis-ci.com/SwagLyrics/SwagLyrics-discord-bot)
