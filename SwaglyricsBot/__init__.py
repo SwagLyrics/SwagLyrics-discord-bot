@@ -20,3 +20,9 @@ class SpotifyClosed(LyricsError):
                                "Make sure you have enabled status in Settings -> Connections -> Spotify -> Display "
                                "Spotify as your status"):
         super().__init__(message)
+
+
+class ConsoleColors:
+    ENDC = '\033[0m'
+    OKGREEN = '\033[92m'
+    FAIL = '\033[91m'

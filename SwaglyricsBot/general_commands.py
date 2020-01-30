@@ -1,8 +1,10 @@
+import datetime
+
 import discord
 import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
-from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError
+from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors
 
 
 class GeneralCommands(commands.Cog, name="General"):
@@ -31,7 +33,10 @@ class GeneralCommands(commands.Cog, name="General"):
         that will be sent to discord.
         """
         try:
+            print("{}: User {} requested lyrics".format(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                                                        ctx.author))
             if song is None and artists is None:
+                print("    - Song data not provided, trying to fetch it automatically...")
                 song, artists = self.get_spotify_data(ctx.author)
             else:
                 tmp = artists
@@ -39,16 +44,20 @@ class GeneralCommands(commands.Cog, name="General"):
                 artists.append(tmp)
             artists_string = self.artists_to_string(artists)
             debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
-            print("User: {}".format(ctx.author), debug_string)
+            print("    - ", debug_string)
             await ctx.send(debug_string)
             lyrics = self.get_lyrics(song, artists[0])
+            print("    - Lyrics fetched successfully, splitting it into fields...")
             splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+            print("    - Splitted successfully.")
             embed = discord.Embed()
             embed.title = "{} by {}".format(song, artists_string)
             for chunk in splitted_lyrics:
                 embed.add_field(name=u"\u200C", value=chunk, inline=False)
             await ctx.send(embed=embed)
+            print(f"{ConsoleColors.OKGREEN}    - Lyrics sent successfully!{ConsoleColors.ENDC}")
         except LyricsError as ex:
+            print(f"    - {ConsoleColors.FAIL}Error raised: {ex}{ConsoleColors.ENDC}")
             await ctx.send(ex)
 
     @staticmethod
