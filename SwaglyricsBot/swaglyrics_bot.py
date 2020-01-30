@@ -1,3 +1,4 @@
+import discord
 import env_file
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
@@ -10,9 +11,17 @@ from SwaglyricsBot.topGG import TopGG
 bot = commands.Bot(command_prefix="$", help_command=MinimalHelpCommand())
 
 
+def find_mutual_guild(user_id):
+    for guild in bot.guilds:
+        if guild.get_member(user_id):
+            return guild
+    return None
+
+
 @bot.event
 async def on_ready():
     print("Bot is up and running. Waiting for actions.")
+    await bot.change_presence(activity=discord.Activity(name="you type $swaglyrics", type=3), status=discord.Status.online)
 
 
 @bot.event

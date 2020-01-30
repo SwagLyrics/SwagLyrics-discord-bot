@@ -14,6 +14,9 @@ class DevCommands(commands.Cog, name="Dev"):
 
     @commands.command(name="stats")
     async def view_stats(self, ctx):
+        """
+        Returns bot statistics and technical data.
+        """
         app_info = await self.bot.application_info()
         process = psutil.Process(os.getpid())
         embed = discord.Embed(

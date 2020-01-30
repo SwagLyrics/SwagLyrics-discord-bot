@@ -4,7 +4,7 @@ import discord
 import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
-from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors
+from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess
 
 
 class GeneralCommands(commands.Cog, name="General"):
@@ -14,27 +14,43 @@ class GeneralCommands(commands.Cog, name="General"):
 
     @staticmethod
     def get_spotify_data(user):
+        from SwaglyricsBot.swaglyrics_bot import find_mutual_guild
         """
         Reads data from discord spotify activity.
         """
+        if user.dm_channel:
+            print("    - Command was raised in DM, finding mutual guild with user...")
+            guild = find_mutual_guild(user.id)
+            if guild:
+                print("    - User found in {} guild!".format(guild))
+                user = guild.get_member(user.id)
+            else:
+                print("    - User was not found in any guild.")
+                raise NoActivityAccess("I can't access your Spotify data. Make sure to be a member of guild I belong "
+                                       "to. Feel free to join our official server https://discord.gg/mJ44Bvj")
+
         spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)]
-        if len(spotify_activity) == 0:
+        if len(spotify_activity) == 0 or spotify_activity is None:
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
 
     @commands.command(name="ping")
     async def ping(self, ctx):
+        """
+        Checks bot latency.
+        """
         await ctx.send(f"Pong {self.bot.latency * 1000:.03f} ms")
 
     @commands.command(name="swaglyrics")
     async def get_lyrics_command(self, ctx, song=None, artists=None):
         """
-        Main command, get's lyrics, chops it into pieces and generates embed,
-        that will be sent to discord.
+        Gets lyrics for music you are currently listening to on Spotify.
+        Song can be specified as command arguments.
         """
         try:
-            print("{}: User {} requested lyrics".format(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-                                                        ctx.author))
+            print("{}: User {} from {} guild requested lyrics".format(
+                datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                ctx.author, ctx.guild if ctx.guild else ctx.channel))
             if song is None and artists is None:
                 print("    - Song data not provided, trying to fetch it automatically...")
                 song, artists = self.get_spotify_data(ctx.author)

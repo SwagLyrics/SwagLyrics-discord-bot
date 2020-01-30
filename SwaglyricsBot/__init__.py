@@ -22,6 +22,12 @@ class SpotifyClosed(LyricsError):
         super().__init__(message)
 
 
+class NoActivityAccess(LyricsError):
+
+    def __init__(self, message="Can't access your Spotify data."):
+        super().__init__(message)
+
+
 class ConsoleColors:
     ENDC = '\033[0m'
     OKGREEN = '\033[92m'
