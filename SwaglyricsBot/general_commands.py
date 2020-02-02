@@ -5,6 +5,7 @@ import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
 from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess
+from SwaglyricsBot.logs import Log
 
 
 class GeneralCommands(commands.Cog, name="General"):
@@ -47,34 +48,50 @@ class GeneralCommands(commands.Cog, name="General"):
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
         """
+        log = Log()
+
         try:
-            print("{}: User {} from {} guild requested lyrics".format(
-                datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+            await log.add_log("User {} from {} guild requested lyrics".format(
                 ctx.author, ctx.guild if ctx.guild else ctx.channel))
+
             if song is None and artists is None:
-                print("    - Song data not provided, trying to fetch it automatically...")
+                await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
                 song, artists = self.get_spotify_data(ctx.author)
             else:
                 tmp = artists
                 artists = list()
                 artists.append(tmp)
+
             artists_string = self.artists_to_string(artists)
             debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
-            print("    - ", debug_string)
+
+            await log.add_sub_log(debug_string)
             await ctx.send(debug_string)
+
             lyrics = self.get_lyrics(song, artists[0])
-            print("    - Lyrics fetched successfully, splitting it into fields...")
+            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+
             splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            print("    - Splitted successfully.")
+            await log.add_sub_log("Splitted successfully.")
+
             embed = discord.Embed()
             embed.title = "{} by {}".format(song, artists_string)
+
             for chunk in splitted_lyrics:
                 embed.add_field(name=u"\u200C", value=chunk, inline=False)
+
             await ctx.send(embed=embed)
-            print(f"{ConsoleColors.OKGREEN}    - Lyrics sent successfully!{ConsoleColors.ENDC}")
+            await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
+            log.change_log_success_status(True)
         except LyricsError as ex:
-            print(f"    - {ConsoleColors.FAIL}Error raised: {ex}{ConsoleColors.ENDC}")
+            await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
+            log.change_log_success_status(False)
             await ctx.send(ex)
+        except Exception as ex:
+            await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL)
+            log.change_log_success_status(False)
+        finally:
+            await log.send_webhook()
 
     @staticmethod
     def artists_to_string(artists):

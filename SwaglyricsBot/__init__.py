@@ -29,6 +29,8 @@ class NoActivityAccess(LyricsError):
 
 
 class ConsoleColors:
-    ENDC = '\033[0m'
-    OKGREEN = '\033[92m'
-    FAIL = '\033[91m'
+    # First color is console, second is discord
+    EMPTY = ['', '']
+    ENDC = ['\033[0m', '']
+    OKGREEN = ['\033[92m', 'CSS']
+    FAIL = ['\033[91m', '']

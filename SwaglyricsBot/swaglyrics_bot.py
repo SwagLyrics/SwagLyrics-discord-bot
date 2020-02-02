@@ -4,6 +4,7 @@ from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 from discord.ext.commands.help import MinimalHelpCommand
 
+from SwaglyricsBot import logs
 from SwaglyricsBot.dev_commands import DevCommands
 from SwaglyricsBot.general_commands import GeneralCommands
 from SwaglyricsBot.topGG import TopGG
@@ -35,4 +36,6 @@ def run():
     bot.add_cog(DevCommands(bot))
     bot.add_cog(GeneralCommands(bot))
     bot.add_cog(TopGG(bot, token['DBL_TOKEN']))
+    if 'WEBHOOK_URL' in token:
+        logs.webhook_url = token['WEBHOOK_URL']
     bot.run(token["BOT_TOKEN"])
