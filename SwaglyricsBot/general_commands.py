@@ -85,11 +85,12 @@ class GeneralCommands(commands.Cog, name="General"):
             log.change_log_success_status(True)
         except LyricsError as ex:
             await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
-            log.change_log_success_status(False)
+            log.change_log_success_status(None)
             await ctx.send(ex)
         except Exception as ex:
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL)
             log.change_log_success_status(False)
+            await ctx.send(f"There was an error while processing your request.")
         finally:
             await log.send_webhook()
 

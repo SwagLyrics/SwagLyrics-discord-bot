@@ -27,11 +27,14 @@ class Log:
             print(log_string)
         self.embed.description += f"{log_string}\n"
 
+    # Use None for orange status (Lyrics error, not successful but intended behaviour)
     def change_log_success_status(self, value):
         if value:
             self.embed.colour = 3066993
-        else:
+        elif value is False:
             self.embed.colour = 15158332
+        elif not value:
+            self.embed.colour = 15105570
 
     async def send_webhook(self):
         if webhook_url:
