@@ -88,7 +88,7 @@ class GeneralCommands(commands.Cog, name="General"):
             log.change_log_success_status(None)
             await ctx.send(ex)
         except Exception as ex:
-            await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL)
+            await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             log.change_log_success_status(False)
             await ctx.send(f"There was an error while processing your request.")
         finally:

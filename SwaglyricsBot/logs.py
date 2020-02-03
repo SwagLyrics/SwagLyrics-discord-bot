@@ -6,6 +6,7 @@ from discord import Webhook, AsyncWebhookAdapter, Embed
 from SwaglyricsBot import ConsoleColors
 
 webhook_url = ''
+error_supervisor = ''
 
 
 class Log:
@@ -19,12 +20,14 @@ class Log:
         self.embed.timestamp = datetime.datetime.now()
         self.embed.description = ""
 
-    async def add_sub_log(self, value, color=ConsoleColors.EMPTY):
+    async def add_sub_log(self, value, color=ConsoleColors.EMPTY, mention_supervisor=False):
         log_string = "    - {}".format(value)
         if color[0] != '':
             print("{}{}{}".format(color[0], log_string, ConsoleColors.ENDC[0]))
         else:
             print(log_string)
+        if mention_supervisor:
+            log_string += f'\nSUPERVISOR REQUESTED <@{error_supervisor}>'
         self.embed.description += f"{log_string}\n"
 
     # Use None for orange status (Lyrics error, not successful but intended behaviour)

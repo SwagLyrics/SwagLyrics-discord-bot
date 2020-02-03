@@ -38,4 +38,6 @@ def run():
     bot.add_cog(TopGG(bot, token['DBL_TOKEN']))
     if 'WEBHOOK_URL' in token:
         logs.webhook_url = token['WEBHOOK_URL']
+    if 'WEBHOOK_ERROR_SUPERVISOR_ID' in token:
+        logs.error_supervisor = token['WEBHOOK_ERROR_SUPERVISOR_ID']
     bot.run(token["BOT_TOKEN"])
