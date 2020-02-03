@@ -111,8 +111,8 @@ class GeneralCommands(commands.Cog, name="General"):
     @staticmethod
     def get_lyrics(song, artist):
         lyrics = swaglyrics.get_lyrics(song, artist)
-        if lyrics is None:
-            raise LyricsNotFound("Lyrics for {} - {} not found in genius database.".format(song, artist))
+        if not lyrics:
+            raise LyricsNotFound("Lyrics for {} by {} not found on Genius.".format(song, artist))
         return lyrics
 
     @staticmethod
