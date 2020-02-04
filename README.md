@@ -17,6 +17,28 @@ For specified lyrics, type `$swaglyrics <song> <artist>`
 
 ![Bot in action screenshot](https://raw.githubusercontent.com/SwagLyrics/SwagLyrics-discord-bot/master/Bot_in_action.png)
 
+# Commands
+
+## Swaglyrics
+
+Command: `$swaglyrics [song] [artists]` where `song` and `artist` are optional arguments.
+
+Aliases: `$sl`.
+
+Action: Main command, gets lyrics for song you are listening to. 
+
+## Ping
+
+Command: `$ping`.
+
+Action: Pings bot, returns bot delay in `ms`.
+
+## Stats
+
+Command: `$stats`.
+
+Action: Shows bot statistics and technical data.
+
 # Requirements
 
 Spotify needs to be connected with discord, status in "Settings -> Connections -> Spotify -> Display Spotify as your status" needs to be turned on.
