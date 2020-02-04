@@ -42,7 +42,7 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         await ctx.send(f"Pong {self.bot.latency * 1000:.03f} ms")
 
-    @commands.command(name="swaglyrics")
+    @commands.command(name="swaglyrics", aliases=["sl"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
         """
         Gets lyrics for music you are currently listening to on Spotify.
