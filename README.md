@@ -27,6 +27,8 @@ Aliases: `$sl`.
 
 Action: Main command, gets lyrics for song you are listening to. 
 
+Example: `$swaglyrics "Round And Round" "Imagine Dragons"`
+
 ## Ping
 
 Command: `$ping`.
