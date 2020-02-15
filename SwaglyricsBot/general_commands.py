@@ -1,4 +1,4 @@
-import datetime
+import traceback
 
 import discord
 import swaglyrics.cli as swaglyrics
@@ -89,6 +89,7 @@ class GeneralCommands(commands.Cog, name="General"):
             await ctx.send(ex)
         except Exception as ex:
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
+            print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
             await ctx.send(f"There was an error while processing your request.")
         finally:
@@ -127,8 +128,9 @@ class GeneralCommands(commands.Cog, name="General"):
         last_char = None
         for char in string:
             if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
-                chunks.append(chunk)
-                chunk = ""
+                if len(chunk) > 1:  # In case of 3 or more newlines
+                    chunks.append(chunk)
+                    chunk = ""
             chunk += char
             last_char = char
         chunks.append(chunk)

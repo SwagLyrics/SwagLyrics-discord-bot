@@ -35,7 +35,8 @@ def run():
     token = env_file.get()
     bot.add_cog(DevCommands(bot))
     bot.add_cog(GeneralCommands(bot))
-    bot.add_cog(TopGG(bot, token['DBL_TOKEN']))
+    if 'DBL_TOKEN' in token:
+        bot.add_cog(TopGG(bot, token['DBL_TOKEN']))
     if 'WEBHOOK_URL' in token:
         logs.webhook_url = token['WEBHOOK_URL']
     if 'WEBHOOK_ERROR_SUPERVISOR_ID' in token:
