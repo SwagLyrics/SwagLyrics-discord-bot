@@ -91,7 +91,7 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
-            await ctx.send(f"There was an error while processing your request.")
+            await ctx.send(f"There was an error while processing your request. Please try again in a few minutes.")
         finally:
             await log.send_webhook()
 
