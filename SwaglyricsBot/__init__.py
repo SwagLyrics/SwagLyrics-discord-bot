@@ -29,6 +29,12 @@ class NoActivityAccess(LyricsError):
         super().__init__(message)
 
 
+class NotEnoughArguments(LyricsError):
+
+    def __init__(self, message):
+        super().__init__(message)
+
+
 class ConsoleColors:
     # First color is console, second is discord
     EMPTY = ['', '']

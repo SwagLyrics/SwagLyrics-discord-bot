@@ -4,7 +4,8 @@ import discord
 import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
-from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess
+from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
+    NotEnoughArguments
 from SwaglyricsBot.logs import Log
 
 
@@ -57,6 +58,8 @@ class GeneralCommands(commands.Cog, name="General"):
             if song is None and artists is None:
                 await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
                 song, artists = self.get_spotify_data(ctx.author)
+            elif artists is None:
+                raise NotEnoughArguments("Not enough arguments! For usage, check `$help swaglyrics`")
             else:
                 tmp = artists
                 artists = list()
