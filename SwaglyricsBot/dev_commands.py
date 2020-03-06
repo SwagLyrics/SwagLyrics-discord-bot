@@ -19,9 +19,10 @@ class DevCommands(commands.Cog, name="Dev"):
         """
         app_info = await self.bot.application_info()
         process = psutil.Process(os.getpid())
+        total_ram = psutil.virtual_memory().total >> 30
         embed = discord.Embed(
             title="Bot Stats",
-            description="Running on a dedicated server with 8GB RAM.")
+            description="Running on a dedicated server with {}GB RAM.".format(total_ram))
         embed.add_field(name="**__General Info__**", inline=False, value="\u200b")
         embed.add_field(
             name="Owner",
