@@ -22,7 +22,7 @@ class DevCommands(commands.Cog, name="Dev"):
         total_ram = (psutil.virtual_memory().total >> 30) + 1
         embed = discord.Embed(
             title="Bot Stats",
-            description="Running on a dedicated server with {}GB RAM.".format(total_ram))
+            description="Running on a dedicated server with {}GB RAM \n provided by RandomGhost#0666.".format(total_ram))
         embed.add_field(name="**__General Info__**", inline=False, value="\u200b")
         embed.add_field(
             name="Owner",
