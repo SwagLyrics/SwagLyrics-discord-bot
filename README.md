@@ -44,3 +44,27 @@ Action: Shows bot statistics and technical data.
 # Requirements
 
 Spotify needs to be connected with discord, status in "Settings -> Connections -> Spotify -> Display Spotify as your status" needs to be turned on.
+
+# Building from source
+
+Install requirements with `pip3 install -r requirements.txt` (use `pip` or `pip3`, depending on your setup).
+
+`cd` to `Swaglyrics-discord-bot` directory.
+
+Create `.env` file and fill it with token
+
+`BOT_TOKEN=<your token>`
+
+Congratulations! Bot is successfully configured. Now you can run directily with `python3 __main__.py` or install it with `python3 setup.py install` and run with `python3 -m SwaglyricsBot`. Remember to run it from directory where `.env` is located.
+
+## Additional settings
+
+If you want, you can setup logging directly to discord server using webhooks and upload stats to TopGG
+
+`.env` entries:
+
+`WEBHOOK_URL=<your discord webhook url>`
+
+`WEBHOOK_ERROR_SUPERVISOR_ID=<discord user id>` Used for pinging user if error occures.
+
+`DBL_TOKEN=<your TopGG token>`
