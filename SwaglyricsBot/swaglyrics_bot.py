@@ -22,7 +22,7 @@ def find_mutual_guild(user_id):
 @bot.event
 async def on_ready():
     print("Bot is up and running. Waiting for actions.")
-    await bot.change_presence(activity=discord.Activity(name="you type $swaglyrics", type=3), status=discord.Status.online)
+    await bot.change_presence(activity=discord.Activity(name="you type $sl", type=3), status=discord.Status.online)
 
 
 @bot.event
