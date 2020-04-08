@@ -43,9 +43,6 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         await ctx.send(f"Pong {self.bot.latency * 1000:.03f} ms")
 
-    @commands.command(name="github")
-    async def github(self, ctx):
-        await ctx.send("Catch! https://github.com/SwagLyrics/SwagLyrics-discord-bot")
 
     @commands.command(name="swaglyrics", aliases=["sl"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):

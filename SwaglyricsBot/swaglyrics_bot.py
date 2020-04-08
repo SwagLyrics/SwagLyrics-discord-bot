@@ -7,6 +7,7 @@ from discord.ext.commands.help import MinimalHelpCommand
 from SwaglyricsBot import logs
 from SwaglyricsBot.dev_commands import DevCommands
 from SwaglyricsBot.general_commands import GeneralCommands
+from SwaglyricsBot.links_commands import LinksCommands
 from SwaglyricsBot.topGG import TopGG
 
 bot = commands.Bot(command_prefix="$", help_command=MinimalHelpCommand())
@@ -35,6 +36,7 @@ def run():
     token = env_file.get()
     bot.add_cog(DevCommands(bot))
     bot.add_cog(GeneralCommands(bot))
+    bot.add_cog(LinksCommands(bot))
     if 'DBL_TOKEN' in token:
         bot.add_cog(TopGG(bot, token['DBL_TOKEN']))
     if 'WEBHOOK_URL' in token:
