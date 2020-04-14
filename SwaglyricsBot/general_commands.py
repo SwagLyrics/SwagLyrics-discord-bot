@@ -5,7 +5,7 @@ import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
 from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
-    NotEnoughArguments
+    NotEnoughArguments, LyricsTooLong
 from SwaglyricsBot.logs import Log
 
 
@@ -44,7 +44,7 @@ class GeneralCommands(commands.Cog, name="General"):
         await ctx.send(f"Pong {self.bot.latency * 1000:.03f} ms")
 
 
-    @commands.command(name="swaglyrics", aliases=["sl"])
+    @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
         """
         Gets lyrics for music you are currently listening to on Spotify.
@@ -74,7 +74,8 @@ class GeneralCommands(commands.Cog, name="General"):
 
             lyrics = self.get_lyrics(song, artists[0])
             await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-
+            if len(lyrics) >= 6000:
+                raise LyricsTooLong()
             splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
             await log.add_sub_log("Splitted successfully.")
 

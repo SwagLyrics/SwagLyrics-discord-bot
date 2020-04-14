@@ -14,6 +14,12 @@ class LyricsNotFound(LyricsError):
         super().__init__(message)
 
 
+class LyricsTooLong(LyricsError):
+
+    def __init__(self, message="Couldn't send requested lyrics because it was too long."):
+        super().__init__(message)
+
+
 class SpotifyClosed(LyricsError):
 
     def __init__(self, message="You are not listening to anything or Spotify is not connected to discord! \n "
@@ -36,7 +42,6 @@ class NotEnoughArguments(LyricsError):
 
 
 class ConsoleColors:
-    # First color is console, second is discord
     EMPTY = ['', '']
     ENDC = ['\033[0m', '']
     OKGREEN = ['\033[92m', 'CSS']
