@@ -8,5 +8,5 @@ class LinksCommands(commands.Cog, name="Links"):
         await ctx.send("Catch! https://github.com/SwagLyrics/SwagLyrics-discord-bot")
 
     @commands.command(name="topgg", aliases=["vote", "invite"])
-    async def github(self, ctx):
+    async def topgg(self, ctx):
         await ctx.send("Don't forget to vote :) https://top.gg/bot/660170175517032448")
