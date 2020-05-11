@@ -76,10 +76,8 @@ class GeneralCommands(commands.Cog, name="General"):
                 artists = list()
                 artists.append(tmp)
             artists_string = self.artists_to_string(artists)
-
             debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
             await log.add_sub_log(debug_string)
-
             await ctx.send(debug_string)
 
             send_lyrics()
