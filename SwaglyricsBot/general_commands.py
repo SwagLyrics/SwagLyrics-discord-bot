@@ -54,14 +54,15 @@ class GeneralCommands(commands.Cog, name="General"):
         def send_lyrics():
             lyrics = self.get_lyrics(song, artists[0])
             await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
             await log.add_sub_log("Split successfully. Packing into messages...")
 
-            await self.send_chunks(ctx, splitted_lyrics, song, artists_string)
+            await self.send_chunks(ctx, split_lyrics, song, artists_string)
             await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
             log.change_log_success_status(True)
 
         try:
+
             await log.add_log("User {} from {} guild requested lyrics".format(
                 ctx.author, ctx.guild if ctx.guild else ctx.channel))
 
@@ -75,8 +76,10 @@ class GeneralCommands(commands.Cog, name="General"):
                 artists = list()
                 artists.append(tmp)
             artists_string = self.artists_to_string(artists)
+
             debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
             await log.add_sub_log(debug_string)
+
             await ctx.send(debug_string)
 
             send_lyrics()
@@ -85,7 +88,7 @@ class GeneralCommands(commands.Cog, name="General"):
             log.change_log_success_status(None)
             await ctx.send(ex)
         except AttributeError as ex:
-            # redundant code, make it better later
+            # basically a bug where sometimes getting lyrics glitches and then it works in the retry
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
