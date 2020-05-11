@@ -43,7 +43,6 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         await ctx.send(f"Pong {self.bot.latency * 1000:.03f} ms")
 
-
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
         """
@@ -52,7 +51,18 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         log = Log()
 
+        def send_lyrics():
+            lyrics = self.get_lyrics(song, artists[0])
+            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+            await log.add_sub_log("Split successfully. Packing into messages...")
+
+            await self.send_chunks(ctx, split_lyrics, song, artists_string)
+            await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
+            log.change_log_success_status(True)
+
         try:
+
             await log.add_log("User {} from {} guild requested lyrics".format(
                 ctx.author, ctx.guild if ctx.guild else ctx.channel))
 
@@ -65,39 +75,25 @@ class GeneralCommands(commands.Cog, name="General"):
                 tmp = artists
                 artists = list()
                 artists.append(tmp)
-
             artists_string = self.artists_to_string(artists)
-            debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
 
+            debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
             await log.add_sub_log(debug_string)
+
             await ctx.send(debug_string)
 
-            lyrics = self.get_lyrics(song, artists[0])
-            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Splitted successfully. Packing into messagess...")
-            
-            await self.send_chunks(ctx, splitted_lyrics, song, artists_string)
-            await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)
+            send_lyrics()
         except LyricsError as ex:
             await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
             log.change_log_success_status(None)
             await ctx.send(ex)
         except AttributeError as ex:
-            # redundant code, make it better later
+            # basically a bug where sometimes getting lyrics glitches and then it works in the retry
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
 
-            lyrics = self.get_lyrics(song, artists[0])
-            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Splitted successfully. Packing into messagess...")
-
-            await self.send_chunks(ctx, splitted_lyrics, song, artists_string)
-            await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)
+            send_lyrics()
         except Exception as ex:
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
@@ -106,10 +102,9 @@ class GeneralCommands(commands.Cog, name="General"):
         finally:
             await log.send_webhook()
 
-
     async def send_chunks(self, ctx, chunks, song, artists):
         messages = self.pack_into_messages(chunks)
-        i =  0
+        i = 0
         for message in messages:
             embed = discord.Embed()
             embed.title = "{} by {}".format(song, artists) if i == 0 else ""
@@ -117,8 +112,6 @@ class GeneralCommands(commands.Cog, name="General"):
                 embed.add_field(name=u"\u200C", value=chunk, inline=False)
             await ctx.send(embed=embed)
             i = i + 1
-        
-
 
     def pack_into_messages(self, chunks):
         messages = [[]]
