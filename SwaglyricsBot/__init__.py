@@ -14,12 +14,6 @@ class LyricsNotFound(LyricsError):
         super().__init__(message)
 
 
-class LyricsTooLong(LyricsError):
-
-    def __init__(self, message="Couldn't send requested lyrics because it was too long."):
-        super().__init__(message)
-
-
 class SpotifyClosed(LyricsError):
 
     def __init__(self, message="You are not listening to anything or Spotify is not connected to discord! \n "

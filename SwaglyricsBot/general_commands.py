@@ -5,7 +5,7 @@ import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
 from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
-    NotEnoughArguments, LyricsTooLong
+    NotEnoughArguments
 from SwaglyricsBot.logs import Log
 
 
@@ -74,18 +74,10 @@ class GeneralCommands(commands.Cog, name="General"):
 
             lyrics = self.get_lyrics(song, artists[0])
             await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            if len(lyrics) >= 6000:
-                raise LyricsTooLong()
             splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Splitted successfully.")
-
-            embed = discord.Embed()
-            embed.title = "{} by {}".format(song, artists_string)
-
-            for chunk in splitted_lyrics:
-                embed.add_field(name=u"\u200C", value=chunk, inline=False)
-
-            await ctx.send(embed=embed)
+            await log.add_sub_log("Splitted successfully. Packing into messagess...")
+            
+            await self.send_chunks(ctx, splitted_lyrics, song, artists_string)
             await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
             log.change_log_success_status(True)
         except LyricsError as ex:
@@ -99,6 +91,30 @@ class GeneralCommands(commands.Cog, name="General"):
             await ctx.send(f"There was an error while processing your request. Please try again in a few minutes.")
         finally:
             await log.send_webhook()
+
+
+    async def send_chunks(self, ctx, chunks, song, artists):
+        messages = self.pack_into_messages(chunks)
+        i =  0
+        for message in messages:
+            embed = discord.Embed()
+            embed.title = "{} by {}".format(song, artists) if i == 0 else ""
+            for chunk in message:
+                embed.add_field(name=u"\u200C", value=chunk, inline=False)
+            await ctx.send(embed=embed)
+            i = i + 1
+        
+
+
+    def pack_into_messages(self, chunks):
+        messages = [[]]
+        i = 0
+        for chunk in chunks:
+            if sum(len(j) for j in messages[i]) + len(chunk) > 6000:
+                i = i + 1
+                messages.append([])
+            messages[i].append(chunk)
+        return messages
 
     @staticmethod
     def artists_to_string(artists):
