@@ -89,12 +89,12 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
-            
+
             lyrics = self.get_lyrics(song, artists[0])
             await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
             splitted_lyrics = self.chop_string_into_chunks(lyrics, 1024)
             await log.add_sub_log("Splitted successfully. Packing into messagess...")
-            
+
             await self.send_chunks(ctx, splitted_lyrics, song, artists_string)
             await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
             log.change_log_success_status(True)
