@@ -80,7 +80,7 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(debug_string)
             await ctx.send(debug_string)
 
-            send_lyrics()
+            await send_lyrics()
         except LyricsError as ex:
             await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
             log.change_log_success_status(None)
@@ -91,7 +91,7 @@ class GeneralCommands(commands.Cog, name="General"):
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
 
-            send_lyrics()
+            await send_lyrics()
         except Exception as ex:
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
