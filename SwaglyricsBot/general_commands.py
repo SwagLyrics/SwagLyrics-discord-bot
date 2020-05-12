@@ -90,7 +90,7 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
-
+            await log.add_sub_log("Retrying...")
             await send_lyrics()
         except Exception as ex:
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
