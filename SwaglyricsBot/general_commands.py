@@ -51,7 +51,7 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         log = Log()
 
-        def send_lyrics():
+        async def send_lyrics():
             lyrics = self.get_lyrics(song, artists[0])
             await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
             split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
