@@ -14,6 +14,9 @@ bot = commands.Bot(command_prefix="$", help_command=MinimalHelpCommand())
 
 
 def find_mutual_guild(user_id):
+    """
+    Finds mutual guild for user and bot.
+    """
     for guild in bot.guilds:
         if guild.get_member(user_id):
             return guild
@@ -33,6 +36,9 @@ async def on_command_error(ctx, error):
 
 
 def run():
+    """
+    Bot setup
+    """
     token = env_file.get()
     bot.add_cog(DevCommands(bot))
     bot.add_cog(GeneralCommands(bot))

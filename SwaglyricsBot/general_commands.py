@@ -18,7 +18,7 @@ class GeneralCommands(commands.Cog, name="General"):
     def get_spotify_data(user):
         from SwaglyricsBot.swaglyrics_bot import find_mutual_guild
         """
-        Reads data from discord spotify activity.
+        Reads data from discord spotify activity. 
         """
         if user.dm_channel:
             print("    - Command was raised in DM, finding mutual guild with user...")
@@ -31,7 +31,7 @@ class GeneralCommands(commands.Cog, name="General"):
                 raise NoActivityAccess("I can't access your Spotify data. Make sure to be a member of guild I belong "
                                        "to. Feel free to join our official server https://discord.gg/mJ44Bvj")
 
-        spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)]
+        spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)] # reads spotify activity if exist
         if len(spotify_activity) == 0 or spotify_activity is None:
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
@@ -111,11 +111,15 @@ class GeneralCommands(commands.Cog, name="General"):
             await ctx.send(embed=embed)
             i = i + 1
 
+    @staticmethod
     def pack_into_messages(self, chunks):
+        """
+        Splits chunks into separate messages, discord limits one message to 6000 chars.
+        """
         messages = [[]]
         i = 0
         for chunk in chunks:
-            if sum(len(j) for j in messages[i]) + len(chunk) > 6000:
+            if sum(len(j) for j in messages[i]) + len(chunk) > 6000: # if sum of chars in message + chunk length exceeds limit
                 i = i + 1
                 messages.append([])
             messages[i].append(chunk)
@@ -124,7 +128,7 @@ class GeneralCommands(commands.Cog, name="General"):
     @staticmethod
     def artists_to_string(artists):
         """
-        List of artists into human friendly string
+        Converts list of artists into human friendly string
         """
         if len(artists) == 0:
             return ""
@@ -137,6 +141,9 @@ class GeneralCommands(commands.Cog, name="General"):
 
     @staticmethod
     def get_lyrics(song, artist):
+        """
+        Fetches lyrics using swaglyrics library
+        """
         lyrics = swaglyrics.get_lyrics(song, artist)
         if not lyrics:
             raise LyricsNotFound("Lyrics for {} by {} not found on Genius.".format(song, artist))
