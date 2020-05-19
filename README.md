@@ -13,7 +13,7 @@ An implementation of swaglyrics into a discord bot. When you listen to music on 
 
 Simply type `$swaglyrics` and let the magic happen!
 
-For specified lyrics, type `$swaglyrics <song> <artist>`
+For specific lyrics, type `$swaglyrics <song> <artist>`
 
 <p align="center">
   <img src=https://raw.githubusercontent.com/SwagLyrics/SwagLyrics-discord-bot/master/swaglyrics_discord_mockup.png alt="SwagLyrics Bot in action">
@@ -35,7 +35,7 @@ Example: `$swaglyrics "Round And Round" "Imagine Dragons"`
 
 Command: `$ping`.
 
-Action: Pings bot, returns bot delay in `ms`.
+Action: Pings bot, returns bot latency in `ms`.
 
 ## Stats
 
