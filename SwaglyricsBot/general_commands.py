@@ -112,7 +112,7 @@ class GeneralCommands(commands.Cog, name="General"):
             i = i + 1
 
     @staticmethod
-    def pack_into_messages(self, chunks):
+    def pack_into_messages(chunks):
         """
         Splits chunks into separate messages, discord limits one message to 6000 chars.
         """
