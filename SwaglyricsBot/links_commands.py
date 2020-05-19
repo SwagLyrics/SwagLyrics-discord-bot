@@ -15,4 +15,4 @@ class LinksCommands(commands.Cog, name="Links"):
         """
         Sends bot topGG link
         """
-        await ctx.send("Don't forget to vote :) https://top.gg/bot/660170175517032448")
+        await ctx.send("Don't forget to vote :slight_smile: https://top.gg/bot/660170175517032448")

@@ -24,7 +24,7 @@ class GeneralCommands(commands.Cog, name="General"):
             print("    - Command was raised in DM, finding mutual guild with user...")
             guild = find_mutual_guild(user.id)
             if guild:
-                print("    - User found in {} guild!".format(guild))
+                print(f"    - User found in {guild} guild!")
                 user = guild.get_member(user.id)
             else:
                 print("    - User was not found in any guild.")
@@ -41,7 +41,7 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         Checks bot latency.
         """
-        await ctx.send(f"Pong {self.bot.latency * 1000:.03f} ms")
+        await ctx.send(f"Pong {self.bot.latency * 1000:.03f}ms")
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
@@ -142,7 +142,7 @@ class GeneralCommands(commands.Cog, name="General"):
     @staticmethod
     def get_lyrics(song, artist):
         """
-        Fetches lyrics using swaglyrics library
+        Fetches lyrics using the Swaglyrics library
         """
         lyrics = swaglyrics.get_lyrics(song, artist)
         if not lyrics:
@@ -154,7 +154,7 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         Chops lyrics into chunks no longer than 1024 characters.
         Discord embed section can't be longer than that.
-        To avoid breaks mid word, it chops to first gap between lyrics sections
+        To avoid breaks mid-word, it chops to first gap between lyrics sections
         """
         chunk = ""
         chunks = list()
