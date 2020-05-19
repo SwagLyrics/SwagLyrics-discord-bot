@@ -16,7 +16,7 @@ class LyricsNotFound(LyricsError):
 
 class SpotifyClosed(LyricsError):
 
-    def __init__(self, message="You are not listening to anything or Spotify is not connected to discord! \n "
+    def __init__(self, message="You are not listening to anything or Spotify is not connected to Discord! \n "
                                "Make sure you have enabled status in Settings -> Connections -> Spotify -> Display "
                                "Spotify as your status or use `$sl [song] [artist]`\nExample `$sl "
                                "\"Bad Guy\" \"Billie Eilish\"`."):
