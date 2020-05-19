@@ -63,7 +63,10 @@ class GeneralCommands(commands.Cog, name="General"):
 
         try:
 
-            await log.add_log(f"User {ctx.author} from {ctx.guild if ctx.guild else ctx.channel} guild requested lyrics")
+            await log.add_log(
+                f"User {ctx.author} from " +
+                f"{ctx.guild if ctx.guild else ctx.channel} guild requested lyrics"
+            )
 
             if song is None and artists is None:
                 await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
