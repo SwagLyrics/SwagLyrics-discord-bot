@@ -63,8 +63,7 @@ class GeneralCommands(commands.Cog, name="General"):
 
         try:
 
-            await log.add_log("User {} from {} guild requested lyrics".format(
-                ctx.author, ctx.guild if ctx.guild else ctx.channel))
+            await log.add_log(f"User {ctx.author} from {ctx.guild if ctx.guild else ctx.channel} guild requested lyrics")
 
             if song is None and artists is None:
                 await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
@@ -76,7 +75,7 @@ class GeneralCommands(commands.Cog, name="General"):
                 artists = list()
                 artists.append(tmp)
             artists_string = self.artists_to_string(artists)
-            debug_string = "Getting lyrics for {} by {}".format(song, artists_string)
+            debug_string = f"Getting lyrics for {song} by {artists_string}"
             await log.add_sub_log(debug_string)
             await ctx.send(debug_string)
 
@@ -105,7 +104,7 @@ class GeneralCommands(commands.Cog, name="General"):
         i = 0
         for message in messages:
             embed = discord.Embed()
-            embed.title = "{} by {}".format(song, artists) if i == 0 else ""
+            embed.title = f"{song} by {artists}" if i == 0 else ""
             for chunk in message:
                 embed.add_field(name=u"\u200C", value=chunk, inline=False)
             await ctx.send(embed=embed)
@@ -142,11 +141,11 @@ class GeneralCommands(commands.Cog, name="General"):
     @staticmethod
     def get_lyrics(song, artist):
         """
-        Fetches lyrics using the Swaglyrics library
+        Fetches lyrics using the swaglyrics library
         """
         lyrics = swaglyrics.get_lyrics(song, artist)
         if not lyrics:
-            raise LyricsNotFound("Lyrics for {} by {} not found on Genius.".format(song, artist))
+            raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
         return lyrics
 
     @staticmethod

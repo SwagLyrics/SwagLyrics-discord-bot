@@ -29,9 +29,9 @@ class Log:
         mention_supervisor is a special arugment that will ping defined in .env file supervisor in discord.
         color only affects console.
         """
-        log_string = "    - {}".format(value)
+        log_string = f"    - {value}"
         if color[0] != '':
-            print("{}{}{}".format(color[0], log_string, ConsoleColors.ENDC[0]))
+            print(f"{color[0]}{log_string}{ConsoleColors.ENDC[0]}")
         else:
             print(log_string)
         if mention_supervisor:
