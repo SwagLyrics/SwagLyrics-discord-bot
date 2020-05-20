@@ -7,6 +7,7 @@ from discord.ext import commands
 from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
     NotEnoughArguments
 from SwaglyricsBot.logs import Log
+import re
 
 
 class GeneralCommands(commands.Cog, name="General"):
@@ -154,14 +155,14 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         Chops lyrics into chunks no longer than 1024 characters.
         Discord embed section can't be longer than that.
-        To avoid breaks mid word, it chops to first gap between lyrics sections
+        To avoid breaks mid word, it chops to first gap between lyrics sections.
         """
         chunk = ""
         chunks = list()
         last_char = None
         for char in string:
             if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
-                if len(chunk) > 1:  # In case of 3 or more newlines
+                if len(chunk) > 1 and not re.match(r'^(\\n)+$', chunk):  # In case of 3 or more newlines, and ignore chunks with only newlines
                     chunks.append(chunk)
                     chunk = ""
             chunk += char
