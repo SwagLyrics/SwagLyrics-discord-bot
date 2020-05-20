@@ -162,7 +162,7 @@ class GeneralCommands(commands.Cog, name="General"):
         last_char = None
         for char in string:
             if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
-                if len(chunk) > 1 and not re.match(r'^(\\n)+$', chunk):  # In case of 3 or more newlines, and ignore chunks with only newlines
+                if len(chunk) > 1 and not re.match(r'^(\n)+$', chunk):  # In case of 3 or more newlines, and ignore chunks with only newlines
                     chunks.append(chunk)
                     chunk = ""
             chunk += char
