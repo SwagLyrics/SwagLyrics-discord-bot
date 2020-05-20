@@ -130,6 +130,23 @@ Arguing with my dad, and he said, "It ain't Christ-like"
         with self.assertRaises(LyricsNotFound):
             asyncio.create_task(GeneralCommands.get_lyrics("(*&d78a kj"))
 
+            
+    def test_that_pack_into_messages_returns_empty_message(self):
+        chunks = []
+        messages = GeneralCommands.pack_into_messages(chunks)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0], [])
+
+    def test_that_pack_into_messages_packs_into_one(self):
+        chunks = ["I am mr. robot", "or am I?", "hey vsauce, michael here"]
+        messages = GeneralCommands.pack_into_messages(chunks)
+        self.assertEqual(len(messages), 1)
+
+    def test_that_pack_into_messages_packs_into_two(self):
+        chunks = [self.testing_lyrics, self.testing_lyrics, self.testing_lyrics, self.testing_lyrics_2, self.testing_lyrics_2]
+        messages = GeneralCommands.pack_into_messages(chunks)
+        self.assertEqual(len(messages), 2)
+
 
 if __name__ == '__main__':
     unittest.main()
