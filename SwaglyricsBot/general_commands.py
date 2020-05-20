@@ -7,7 +7,7 @@ from discord.ext import commands
 from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
     NotEnoughArguments
 from SwaglyricsBot.logs import Log
-import re
+from re import match
 
 
 class GeneralCommands(commands.Cog, name="General"):
@@ -160,9 +160,10 @@ class GeneralCommands(commands.Cog, name="General"):
         chunk = ""
         chunks = list()
         last_char = None
+        only_new_lines = r'^(\n)+$';
         for char in string:
             if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
-                if len(chunk) > 1 and not re.match(r'^(\n)+$', chunk):  # In case of 3 or more newlines, and ignore chunks with only newlines
+                if len(chunk) > 1 and not match(only_new_lines, chunk):  # In case of 3 or more newlines, and ignore chunks with only newlines
                     chunks.append(chunk)
                     chunk = ""
             chunk += char
