@@ -29,7 +29,7 @@ pyparsing==2.4.6
 pytest==5.3.2
 pytest-cov==2.8.1
 requests==2.22.0
-six==1.13.0
+six==1.14.0
 soupsieve==1.9.5
 swaglyrics==1.1.1
 SwSpotify==1.1.1
