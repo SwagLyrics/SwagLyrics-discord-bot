@@ -10,7 +10,7 @@ colorama==0.4.1
 coverage==5.0.1
 dblpy==0.3.3
 discord==1.0.1
-discord.py==1.2.5
+discord.py==1.3.3
 env-file==2020.5.9
 Flask==1.1.1
 idna==2.8
