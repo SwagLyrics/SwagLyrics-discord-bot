@@ -154,7 +154,7 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         Chops lyrics into chunks no longer than 1024 characters.
         Discord embed section can't be longer than that.
-        To avoid breaks mid word, it chops to first gap between lyrics sections
+        To avoid breaks mid word, it chops to first gap between lyrics sections.
         """
         chunk = ""
         chunks = list()
