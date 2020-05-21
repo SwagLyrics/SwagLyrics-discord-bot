@@ -1,7 +1,7 @@
 import discord
 import env_file
 from discord.ext import commands
-from discord.ext.commands import CommandNotFound
+from discord.ext.commands import CommandNotFound, when_mentioned_or
 from discord.ext.commands.help import MinimalHelpCommand
 
 from SwaglyricsBot import logs
@@ -10,7 +10,7 @@ from SwaglyricsBot.general_commands import GeneralCommands
 from SwaglyricsBot.links_commands import LinksCommands
 from SwaglyricsBot.topGG import TopGG
 
-bot = commands.Bot(command_prefix="$", help_command=MinimalHelpCommand())
+bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=MinimalHelpCommand())
 
 
 def find_mutual_guild(user_id):
@@ -32,7 +32,7 @@ async def on_ready():
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
-        await ctx.send("{}. Use $help for commands.".format(error))
+        await ctx.send(f"{error}. Use $help for commands.")
 
 
 def run():
