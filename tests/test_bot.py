@@ -130,7 +130,7 @@ Arguing with my dad, and he said, "It ain't Christ-like"
         with self.assertRaises(LyricsNotFound):
             asyncio.create_task(GeneralCommands.get_lyrics("(*&d78a kj"))
 
-            
+
     def test_that_pack_into_messages_returns_empty_message(self):
         chunks = []
         messages = GeneralCommands.pack_into_messages(chunks)
