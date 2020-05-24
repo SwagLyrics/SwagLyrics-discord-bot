@@ -29,12 +29,6 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(name="you type $sl", type=3), status=discord.Status.online)
 
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, CommandNotFound):
-        await ctx.send(f"{error}. Use $help for commands.")
-
-
 def run():
     """
     Bot setup
