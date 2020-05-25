@@ -3,4 +3,4 @@ dblpy==0.3.3
 discord.py==1.3.3
 env-file==2020.5.9
 psutil==5.7.0
-swaglyrics==1.1.1
+swaglyrics==1.1.2
