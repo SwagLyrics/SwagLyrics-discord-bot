@@ -3,7 +3,7 @@
 [![Discord Bots](https://top.gg/api/widget/status/660170175517032448.svg)](https://top.gg/bot/660170175517032448)
 [![Discord Bots](https://top.gg/api/widget/servers/660170175517032448.svg)](https://top.gg/bot/660170175517032448)
 [![Build Status](https://travis-ci.com/SwagLyrics/SwagLyrics-discord-bot.svg?branch=master)](https://travis-ci.com/SwagLyrics/SwagLyrics-discord-bot)
-[![codecov](https://codecov.io/gh/SwagLyrics/Swaglyrics-discord-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/SwagLyrics/Swaglyrics-discord-bot)
+[![codecov](https://codecov.io/gh/SwagLyrics/SwagLyrics-discord-bot/branch/master/graph/badge.svg)](https://codecov.io/gh/SwagLyrics/SwagLyrics-discord-bot)
 
 
 # SwagLyrics-discord-bot
@@ -21,7 +21,7 @@ For specific lyrics, type `$swaglyrics <song> <artist>`
 
 # Commands
 
-## Swaglyrics
+## SwagLyrics
 
 Command: `$swaglyrics [song] [artists]` where `song` and `artist` are optional arguments.
 
@@ -51,13 +51,13 @@ Spotify needs to be connected with discord, status in "Settings -> Connections -
 
 Install requirements with `pip3 install -r requirements.txt` (use `pip` or `pip3`, depending on your setup).
 
-`cd` to `Swaglyrics-discord-bot` directory.
+`cd` to `SwagLyrics-discord-bot` directory.
 
 Create `.env` file and fill it with token
 
 `BOT_TOKEN=<your token>`
 
-Congratulations! Bot is successfully configured. Now you can run directily with `python3 __main__.py` or install it with `python3 setup.py install` and run with `python3 -m SwaglyricsBot`. Remember to run it from directory where `.env` is located.
+Congratulations! Bot is successfully configured. Now you can run directily with `python3 __main__.py` or install it with `python3 setup.py install` and run with `python3 -m SwagLyricsBot`. Remember to run it from directory where `.env` is located.
 
 ## Additional settings
 

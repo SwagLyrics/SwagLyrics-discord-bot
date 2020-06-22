@@ -12,7 +12,7 @@ setuptools.setup(
     description="A automatic lyrics fetching discord bot.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/flabbet/Swaglyrics-discord-bot",
+    url="https://github.com/flabbet/SwagLyrics-discord-bot",
     packages=['SwagLyricsBot'],
     install_requires=[
         'swaglyrics',

@@ -16,5 +16,5 @@ install:
   - pip3 install --upgrade pytest
 script:
   - cd tests
-  - pytest --cov-config=.coveragerc --cov=SwaglyricsBot test_bot.py
+  - pytest --cov-config=.coveragerc --cov=SwagLyricsBot test_bot.py
   - codecov
