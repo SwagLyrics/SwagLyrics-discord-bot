@@ -5,6 +5,11 @@ python:
   - "3.8"
   - "3.8-dev"
   - "nightly"
+
+matrix:
+    allow_failures:
+        - python: nightly
+        
 install:
   - pip3 install -r requirements.txt
   - pip3 install .[dev]
