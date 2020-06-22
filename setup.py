@@ -22,7 +22,8 @@ setuptools.setup(
     extras_require={
         'dev':[
             'pytest',
-            'codecov'
+            'codecov',
+            'pytest-cov'
         ]
     },
     keywords='discord bot swaglyrics lyrics',
