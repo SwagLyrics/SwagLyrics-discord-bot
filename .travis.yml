@@ -7,7 +7,7 @@ python:
   - "nightly"
 install:
   - pip3 install -r requirements.txt
-  - pip3 install .
+  - pip3 install .[dev]
 script:
   - cd tests
   - pytest --cov-config=.coveragerc --cov=SwaglyricsBot test_bot.py
