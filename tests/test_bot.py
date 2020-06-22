@@ -117,7 +117,7 @@ Arguing with my dad, and he said, "It ain't Christ-like"
         for chunk in chunks:
             self.assertTrue(len(chunk) <= 1024)
 
-    async def test_01that_lyrics_is_correct(self):
+    def test_01that_lyrics_is_correct(self):
         lyrics = GeneralCommands.get_lyrics("Wonderful", "Caravan Palace")
         self.assertEqual(lyrics, self.testing_lyrics)
 

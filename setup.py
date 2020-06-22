@@ -19,6 +19,13 @@ setuptools.setup(
         'discord',
         'env_file'
     ],
+    extras_require={
+        'dev':[
+            'pytest',
+            'codecov',
+            'pytest-cov'
+        ]
+    },
     keywords='discord bot swaglyrics lyrics',
     classifiers=[
         "Programming Language :: Python :: 3",

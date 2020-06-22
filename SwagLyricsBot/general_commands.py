@@ -50,7 +50,7 @@ class GeneralCommands(commands.Cog, name="General"):
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
         """
-        log = Log()
+        log = Log()    
 
         async def send_lyrics():
             lyrics = self.get_lyrics(song, artists[0])
@@ -60,7 +60,7 @@ class GeneralCommands(commands.Cog, name="General"):
 
             await self.send_chunks(ctx, split_lyrics, song, artists_string)
             await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)
+            log.change_log_success_status(True)            
 
         try:
 
