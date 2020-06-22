@@ -1,19 +1,19 @@
 import setuptools
-import SwaglyricsBot
+import SwagLyricsBot
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="SwaglyricsBot",
-    version=SwaglyricsBot.__version__,
+    name="SwagLyricsBot",
+    version=SwagLyricsBot.__version__,
     author="Krzysztof Krysiński",
     author_email="krysinskikrzysztof123@gmail.com",
     description="A automatic lyrics fetching discord bot.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/flabbet/Swaglyrics-discord-bot",
-    packages=['SwaglyricsBot'],
+    packages=['SwagLyricsBot'],
     install_requires=[
         'swaglyrics',
         'discord',
