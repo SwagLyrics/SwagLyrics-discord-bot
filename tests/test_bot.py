@@ -1,9 +1,9 @@
 import asyncio
 import unittest
 
-from SwaglyricsBot.general_commands import GeneralCommands
+from SwagLyricsBot.general_commands import GeneralCommands
 
-from SwaglyricsBot import LyricsNotFound
+from SwagLyricsBot import LyricsNotFound
 
 
 class BotTests(unittest.TestCase):
