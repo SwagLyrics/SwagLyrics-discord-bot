@@ -8,6 +8,7 @@ python:
 install:
   - pip3 install -r requirements.txt
   - pip3 install .[dev]
+  - pip3 install --upgrade pytest
 script:
   - cd tests
   - pytest --cov-config=.coveragerc --cov=SwaglyricsBot test_bot.py
