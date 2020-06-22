@@ -37,13 +37,6 @@ class GeneralCommands(commands.Cog, name="General"):
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
 
-    @commands.command(name="ping")
-    async def ping(self, ctx):
-        """
-        Checks bot latency.
-        """
-        await ctx.send(f"Pong! {self.bot.latency * 1000:.03f}ms")
-
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
         """
