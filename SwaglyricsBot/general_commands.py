@@ -42,7 +42,7 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         Checks bot latency.
         """
-        await ctx.send(f"Pong {self.bot.latency * 1000:.03f}ms")
+        await ctx.send(f"Pong! {self.bot.latency * 1000:.03f}ms")
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
