@@ -118,7 +118,7 @@ Arguing with my dad, and he said, "It ain't Christ-like"
             self.assertTrue(len(chunk) <= 1024)
 
     def test_01that_lyrics_is_correct(self):
-        lyrics = GeneralCommands.get_lyrics("Wonderful", "Caravan Palace")
+        lyrics = GeneralCommands.get_lyrics("Wonderland", "Caravan Palace")
         self.assertEqual(lyrics, self.testing_lyrics)
 
     def test_that_artists_list_converts_to_string(self):
