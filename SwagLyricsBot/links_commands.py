@@ -10,9 +10,16 @@ class LinksCommands(commands.Cog, name="Links"):
         """
         await ctx.send("Catch! https://github.com/SwagLyrics/SwagLyrics-discord-bot")
 
-    @commands.command(name="topgg", aliases=["vote", "invite"])
+    @commands.command(name="topgg", aliases=["invite"])
     async def topgg(self, ctx):
         """
         Sends bot topGG link
         """
-        await ctx.send("Don't forget to vote :) https://top.gg/bot/660170175517032448")
+        await ctx.send("Don't forget to vote :) \nInvite link: https://top.gg/bot/660170175517032448")
+
+    @commands.command(name="vote")
+    async def vote(self, ctx):
+        """
+        Sends bot topGG link
+        """
+        await ctx.send("Thank you :heart: \nhttps://top.gg/bot/660170175517032448")

@@ -1,4 +1,4 @@
-name = 'SwaglyricsBot'
+name = 'SwagLyricsBot'
 __version__ = '0.0.1'
 
 

@@ -3,7 +3,7 @@ import datetime
 import aiohttp
 from discord import Webhook, AsyncWebhookAdapter, Embed
 
-from SwaglyricsBot import ConsoleColors
+from SwagLyricsBot import ConsoleColors
 
 webhook_url = ''
 error_supervisor = ''

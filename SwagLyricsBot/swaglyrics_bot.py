@@ -4,11 +4,11 @@ from discord.ext import commands
 from discord.ext.commands import CommandNotFound, when_mentioned_or
 from discord.ext.commands.help import MinimalHelpCommand
 
-from SwaglyricsBot import logs
-from SwaglyricsBot.dev_commands import DevCommands
-from SwaglyricsBot.general_commands import GeneralCommands
-from SwaglyricsBot.links_commands import LinksCommands
-from SwaglyricsBot.topGG import TopGG
+from SwagLyricsBot import logs
+from SwagLyricsBot.dev_commands import DevCommands
+from SwagLyricsBot.general_commands import GeneralCommands
+from SwagLyricsBot.links_commands import LinksCommands
+from SwagLyricsBot.topGG import TopGG
 
 bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=MinimalHelpCommand())
 

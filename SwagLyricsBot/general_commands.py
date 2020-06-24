@@ -5,9 +5,9 @@ import re
 import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
-from SwaglyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
+from SwagLyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
     NotEnoughArguments
-from SwaglyricsBot.logs import Log
+from SwagLyricsBot.logs import Log
 
 
 class GeneralCommands(commands.Cog, name="General"):
@@ -17,7 +17,7 @@ class GeneralCommands(commands.Cog, name="General"):
 
     @staticmethod
     def get_spotify_data(user):
-        from SwaglyricsBot.swaglyrics_bot import find_mutual_guild
+        from SwagLyricsBot.swaglyrics_bot import find_mutual_guild
         """
         Reads data from discord spotify activity. 
         """
@@ -36,13 +36,6 @@ class GeneralCommands(commands.Cog, name="General"):
         if len(spotify_activity) == 0 or spotify_activity is None:
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
-
-    @commands.command(name="ping")
-    async def ping(self, ctx):
-        """
-        Checks bot latency.
-        """
-        await ctx.send(f"Pong {self.bot.latency * 1000:.03f}ms")
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):

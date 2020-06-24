@@ -44,3 +44,10 @@ class DevCommands(commands.Cog, name="Dev"):
             text=f"Made by {app_info.owner}",
             icon_url=app_info.owner.avatar_url_as(size=128))
         await ctx.send(embed=embed)
+
+    @commands.command(name="ping")
+    async def ping(self, ctx):
+        """
+        Checks bot latency.
+        """
+        await ctx.send(f"Pong! {self.bot.latency * 1000:.03f}ms")
