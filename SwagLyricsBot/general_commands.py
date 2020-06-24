@@ -21,10 +21,12 @@ class GeneralCommands(commands.Cog, name="General"):
         Sends help message
         """
 
-        embed = discord.Embed(title="SwagLyrics Help", description="Thank you for using SwagLyrics! Here are the commands you can use:")
+        embed = discord.Embed(title="SwagLyrics Help", description="Thank you for using SwagLyrics! Here are the "
+                                                                   "commands you can use:")
 
-        embed.add_field(name="`$sl` or `$swaglyrics`", value="Automatically get lyrics for music you are currently listening to on Spotify. "
-            "Optionally, to get lyrics for a specific song, use `$sl [song] [artist]` \nEg. `$sl \"In The End\" \"Linkin Park\"`", inline=False)
+        embed.add_field(name="`$sl` or `$swaglyrics`", value='Automatically get lyrics for music you are currently '
+                        'listening to on Spotify. Optionally, to get lyrics for a specific song, use '
+                        '`$sl [song] [artist]` \nEg. `$sl "In The End" "Linkin Park"`', inline=False)
         embed.add_field(name="`$invite` or `$topgg`", value="Link to the bot's top.gg page", inline=False)
         embed.add_field(name="`$vote`", value="Link to the bot's top.gg page but nicer", inline=False)
         embed.add_field(name="`$help`", value="Show this message", inline=False)
@@ -51,7 +53,8 @@ class GeneralCommands(commands.Cog, name="General"):
                 raise NoActivityAccess("I can't access your Spotify data. Make sure to be a member of guild I belong "
                                        "to. Feel free to join our official server https://discord.swaglyrics.dev")
 
-        spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)] # reads spotify activity if exist
+        # read spotify activity if exists
+        spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)]
         if len(spotify_activity) == 0 or spotify_activity is None:
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
@@ -62,7 +65,7 @@ class GeneralCommands(commands.Cog, name="General"):
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
         """
-        log = Log()    
+        log = Log()
 
         async def send_lyrics():
             lyrics = self.get_lyrics(song, artists[0])
@@ -126,7 +129,8 @@ class GeneralCommands(commands.Cog, name="General"):
         messages = [[]]
         i = 0
         for chunk in chunks:
-            if sum(len(j) for j in messages[i]) + len(chunk) > 6000: # if sum of chars in message + chunk length exceeds limit
+            # if sum of chars in message + chunk length exceeds limit
+            if sum(len(j) for j in messages[i]) + len(chunk) > 6000:
                 i += 1
                 messages.append([])
             messages[i].append(chunk)
@@ -166,10 +170,11 @@ class GeneralCommands(commands.Cog, name="General"):
         chunk = ""
         chunks = list()
         last_char = None
-        only_new_lines = r'^(\n)+$';
+        only_new_lines = r'^(\n)+$'
         for char in string:
             if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
-                if len(chunk) > 1 and not re.match(only_new_lines, chunk):  # In case of 3 or more newlines, and ignore chunks with only newlines
+                # In case of 3 or more newlines, and ignore chunks with only newlines
+                if len(chunk) > 1 and not re.match(only_new_lines, chunk):
                     chunks.append(chunk)
                     chunk = ""
             chunk += char
