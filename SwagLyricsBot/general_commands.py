@@ -15,6 +15,27 @@ class GeneralCommands(commands.Cog, name="General"):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(name="help")
+    async def help_message(self, ctx):
+        """
+        Sends help message
+        """
+
+        embed = discord.Embed(title="SwagLyrics Help", description="Thank you for using SwagLyrics! Here are the "
+                                                                   "commands you can use:")
+
+        embed.add_field(name="`$sl` or `$swaglyrics`", value='Automatically get lyrics for music you are currently '
+                        'listening to on Spotify. Optionally, to get lyrics for a specific song, use '
+                        '`$sl [song] [artist]` \nEg. `$sl "In The End" "Linkin Park"`', inline=False)
+        embed.add_field(name="`$invite` or `$topgg`", value="Link to the bot's top.gg page", inline=False)
+        embed.add_field(name="`$vote`", value="Link to the bot's top.gg page but nicer", inline=False)
+        embed.add_field(name="`$help`", value="Show this message", inline=False)
+        embed.add_field(name="`$github`", value="Link to the bot's source code", inline=False)
+        embed.add_field(name="`$ping`", value="Check bot latency", inline=False)
+        embed.set_footer(text="just try $sl when playing something on Spotify :P")
+
+        await ctx.send(embed=embed)
+
     @staticmethod
     def get_spotify_data(user):
         from SwagLyricsBot.swaglyrics_bot import find_mutual_guild
@@ -30,9 +51,10 @@ class GeneralCommands(commands.Cog, name="General"):
             else:
                 print("    - User was not found in any guild.")
                 raise NoActivityAccess("I can't access your Spotify data. Make sure to be a member of guild I belong "
-                                       "to. Feel free to join our official server https://discord.gg/mJ44Bvj")
+                                       "to. Feel free to join our official server https://discord.swaglyrics.dev")
 
-        spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)] # reads spotify activity if exist
+        # read spotify activity if exists
+        spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)]
         if len(spotify_activity) == 0 or spotify_activity is None:
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
@@ -43,7 +65,7 @@ class GeneralCommands(commands.Cog, name="General"):
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
         """
-        log = Log()    
+        log = Log()
 
         async def send_lyrics():
             lyrics = self.get_lyrics(song, artists[0])
@@ -65,7 +87,7 @@ class GeneralCommands(commands.Cog, name="General"):
                 await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
                 song, artists = self.get_spotify_data(ctx.author)
             elif artists is None:
-                raise NotEnoughArguments("Not enough arguments! For usage, check `$help swaglyrics`")
+                raise NotEnoughArguments("Not enough arguments! For usage, check `$help`")
             else:
                 tmp = artists
                 artists = list()
@@ -80,13 +102,6 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
             log.change_log_success_status(None)
             await ctx.send(ex)
-        except AttributeError as ex:
-            # basically a bug where sometimes getting lyrics glitches and then it works in the retry
-            await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
-            print(traceback.print_exception(type(ex), ex, ex.__traceback__))
-            log.change_log_success_status(False)
-            await log.add_sub_log("Retrying...")
-            await send_lyrics()
         except Exception as ex:
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
@@ -104,7 +119,7 @@ class GeneralCommands(commands.Cog, name="General"):
             for chunk in message:
                 embed.add_field(name=u"\u200C", value=chunk, inline=False)
             await ctx.send(embed=embed)
-            i = i + 1
+            i += 1
 
     @staticmethod
     def pack_into_messages(chunks):
@@ -114,8 +129,9 @@ class GeneralCommands(commands.Cog, name="General"):
         messages = [[]]
         i = 0
         for chunk in chunks:
-            if sum(len(j) for j in messages[i]) + len(chunk) > 6000: # if sum of chars in message + chunk length exceeds limit
-                i = i + 1
+            # if sum of chars in message + chunk length exceeds limit
+            if sum(len(j) for j in messages[i]) + len(chunk) > 6000:
+                i += 1
                 messages.append([])
             messages[i].append(chunk)
         return messages
@@ -154,10 +170,11 @@ class GeneralCommands(commands.Cog, name="General"):
         chunk = ""
         chunks = list()
         last_char = None
-        only_new_lines = r'^(\n)+$';
+        only_new_lines = r'^(\n)+$'
         for char in string:
             if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
-                if len(chunk) > 1 and not re.match(only_new_lines, chunk):  # In case of 3 or more newlines, and ignore chunks with only newlines
+                # In case of 3 or more newlines, and ignore chunks with only newlines
+                if len(chunk) > 1 and not re.match(only_new_lines, chunk):
                     chunks.append(chunk)
                     chunk = ""
             chunk += char
