@@ -23,7 +23,7 @@ For specific lyrics, type `$swaglyrics <song> <artist>`
 
 ## SwagLyrics
 
-Command: `$swaglyrics [song] [artists]` where `song` and `artist` are optional arguments.
+Command: `$swaglyrics "song" "artists"` where `song` and `artist` are optional arguments.
 
 Aliases: `$sl`.
 
