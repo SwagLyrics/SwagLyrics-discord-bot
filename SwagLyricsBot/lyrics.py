@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup, UnicodeDammit
 from swaglyrics.cli import stripper
 
 
-async def fetch(session, url, **kwargs) -> str:
+async def fetch(session, url, **kwargs):
     """
     Uses aiohttp to make http GET requests
     """
