@@ -1,7 +1,7 @@
 import os
 import time
 from datetime import timedelta
-from random import getrandbits as rb
+from random import getrandbits
 
 import discord
 import psutil as psutil
