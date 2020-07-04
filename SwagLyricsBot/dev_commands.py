@@ -40,9 +40,8 @@ class DevCommands(commands.Cog, name="Dev"):
                         value=f'{timedelta(seconds=int(time.time() - process.create_time()))}')
         embed.set_footer(
             text=f"Made by {app_info.owner} • clash#1337",
-            icon_url=[app_info.owner.avatar_url_as(size=128),
-                      "https://cdn.discordapp.com/avatars/512708394994368548/a_a14eba30f3290"
-                      "7dd914066eb6878a8ea.gif?size=128"][rb(1)])  # randomize clash or flabbet avatar
+            icon_url=[app_info.owner.avatar_url_as(size=128), self.bot.get_user(512708394994368548).avatar_url_as(
+                size=128)][rb(1)])  # randomize clash or flabbet avatar
         await ctx.send(embed=embed)
 
     @commands.command(name="ping")
