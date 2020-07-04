@@ -41,7 +41,7 @@ class DevCommands(commands.Cog, name="Dev"):
         embed.set_footer(
             text=f"Made by {app_info.owner} • clash#1337",
             icon_url=[app_info.owner.avatar_url_as(size=128), self.bot.get_user(512708394994368548).avatar_url_as(
-                size=128)][rb(1)])  # randomize clash or flabbet avatar
+                size=128)][getrandombits(1)])  # randomize clash or flabbet avatar
         await ctx.send(embed=embed)
 
     @commands.command(name="ping")
