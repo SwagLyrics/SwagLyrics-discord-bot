@@ -20,7 +20,7 @@ setuptools.setup(
         'env_file'
     ],
     extras_require={
-        'dev':[
+        'dev': [
             'pytest',
             'codecov',
             'pytest-cov'
