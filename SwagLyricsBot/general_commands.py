@@ -65,7 +65,7 @@ class GeneralCommands(commands.Cog, name="General"):
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
         """
-        log = Log()
+        log = Log(self.session)
 
         async def send_lyrics():
             lyrics = await get_lyrics(song, artists[0], self.session)
