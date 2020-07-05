@@ -36,7 +36,7 @@ async def get_lyrics(song, artist, session):
         url_data = await fetch(f'{backend_url}/stripper', data={'song': song, 'artist': artist})
         if not url_data:
             raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
-        url = 'https://genius.com/{}-lyrics'.format(url_data)
+        url = f'https://genius.com/{url_data}-lyrics'
         page = await fetch(session, url)
 
     html = BeautifulSoup(page, "html.parser")
