@@ -1,6 +1,6 @@
 import aiohttp
-import discord
 import env_file
+from discord import Activity, ActivityType
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 
@@ -26,7 +26,7 @@ def find_mutual_guild(user_id):
 @bot.event
 async def on_ready():
     print("Bot is up and running. Waiting for actions.")
-    await bot.change_presence(activity=discord.Activity(name="you type $sl", type=3), status=discord.Status.online)
+    await bot.change_presence(activity=Activity(type=ActivityType.watching, name="you type $sl"))
 
 
 async def run():
