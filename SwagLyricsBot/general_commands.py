@@ -26,7 +26,7 @@ class GeneralCommands(commands.Cog, name="General"):
 
         embed.add_field(name="`$sl` or `$swaglyrics`", value='Automatically get lyrics for music you are currently '
                         'listening to on Spotify. Optionally, to get lyrics for a specific song, use '
-                        '`$sl [song] [artist]`. \nE.g. `$sl "In The End" "Linkin Park"`', inline=False)
+                        '`$sl [song] [artist]`. \nEg. `$sl "In The End" "Linkin Park"`', inline=False)
         embed.add_field(name="`$invite` or `$topgg`", value="Link to the bot's top.gg page", inline=False)
         embed.add_field(name="`$vote`", value="Link to the bot's top.gg page but nicer", inline=False)
         embed.add_field(name="`$help`", value="Show this message", inline=False)
