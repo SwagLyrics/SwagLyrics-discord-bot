@@ -1,6 +1,5 @@
 import datetime
 
-import aiohttp
 from discord import Webhook, AsyncWebhookAdapter, Embed
 
 from SwagLyricsBot import ConsoleColors
@@ -12,6 +11,9 @@ error_supervisor = ''
 class Log:
 
     embed = Embed()
+
+    def __init__(self, session):
+        self.session = session
 
     async def add_log(self, value):
         """
@@ -47,7 +49,7 @@ class Log:
         None - Orange
         """
         if value:
-            self.embed.colour = 3066993 # Discord color format
+            self.embed.colour = 3066993  # Discord color format
         elif value is False:
             self.embed.colour = 15158332
         elif not value:
@@ -58,6 +60,5 @@ class Log:
         Sends log embed to discord via webhook if defined in .env file.
         """
         if webhook_url:
-            async with aiohttp.ClientSession() as session:
-                webhook = Webhook.from_url(webhook_url, adapter=AsyncWebhookAdapter(session))
-                await webhook.send(embed=self.embed)
+            webhook = Webhook.from_url(webhook_url, adapter=AsyncWebhookAdapter(self.session))
+            await webhook.send(embed=self.embed)

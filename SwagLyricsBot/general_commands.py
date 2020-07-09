@@ -2,18 +2,18 @@ import traceback
 
 import discord
 import re
-import swaglyrics.cli as swaglyrics
 from discord.ext import commands
 
-from SwagLyricsBot import SpotifyClosed, LyricsNotFound, LyricsError, ConsoleColors, NoActivityAccess, \
-    NotEnoughArguments
+from SwagLyricsBot import SpotifyClosed, LyricsError, ConsoleColors, NoActivityAccess, NotEnoughArguments
 from SwagLyricsBot.logs import Log
+from SwagLyricsBot.lyrics import get_lyrics
 
 
 class GeneralCommands(commands.Cog, name="General"):
 
-    def __init__(self, bot):
+    def __init__(self, bot, session):
         self.bot = bot
+        self.session = session
 
     @commands.command(name="help")
     async def help_message(self, ctx):
@@ -26,7 +26,7 @@ class GeneralCommands(commands.Cog, name="General"):
 
         embed.add_field(name="`$sl` or `$swaglyrics`", value='Automatically get lyrics for music you are currently '
                         'listening to on Spotify. Optionally, to get lyrics for a specific song, use '
-                        '`$sl [song] [artist]` \nEg. `$sl "In The End" "Linkin Park"`', inline=False)
+                        '`$sl [song] [artist]`. \nEg. `$sl "In The End" "Linkin Park"`', inline=False)
         embed.add_field(name="`$invite` or `$topgg`", value="Link to the bot's top.gg page", inline=False)
         embed.add_field(name="`$vote`", value="Link to the bot's top.gg page but nicer", inline=False)
         embed.add_field(name="`$help`", value="Show this message", inline=False)
@@ -65,17 +65,17 @@ class GeneralCommands(commands.Cog, name="General"):
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
         """
-        log = Log()
+        log = Log(self.session)
 
         async def send_lyrics():
-            lyrics = self.get_lyrics(song, artists[0])
+            lyrics = await get_lyrics(song, artists[0], self.session)
             await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
             split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
             await log.add_sub_log("Split successfully. Packing into messages...")
 
             await self.send_chunks(ctx, split_lyrics, song, artists_string)
             await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)            
+            log.change_log_success_status(True)
 
         try:
 
@@ -83,7 +83,7 @@ class GeneralCommands(commands.Cog, name="General"):
                 f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics"
             )
 
-            if song is None and artists is None:
+            if not (song or artists):
                 await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
                 song, artists = self.get_spotify_data(ctx.author)
             elif artists is None:
@@ -149,16 +149,6 @@ class GeneralCommands(commands.Cog, name="General"):
                 continue
             str1 += ", " + artist
         return str1
-
-    @staticmethod
-    def get_lyrics(song, artist):
-        """
-        Fetches lyrics using the swaglyrics library
-        """
-        lyrics = swaglyrics.get_lyrics(song, artist)
-        if not lyrics:
-            raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
-        return lyrics
 
     @staticmethod
     def chop_string_into_chunks(string, chunk_size):

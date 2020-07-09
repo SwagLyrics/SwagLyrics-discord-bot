@@ -2,6 +2,7 @@ import asyncio
 import unittest
 
 from SwagLyricsBot.general_commands import GeneralCommands
+from SwagLyricsBot.lyrics import get_lyrics
 
 from SwagLyricsBot import LyricsNotFound
 
@@ -117,8 +118,8 @@ Arguing with my dad, and he said, "It ain't Christ-like"
         for chunk in chunks:
             self.assertTrue(len(chunk) <= 1024)
 
-    def test_01that_lyrics_is_correct(self):
-        lyrics = GeneralCommands.get_lyrics("Wonderland", "Caravan Palace")
+    async def test_01that_lyrics_is_correct(self):
+        lyrics = await get_lyrics("Wonderland", "Caravan Palace")
         self.assertEqual(lyrics, self.testing_lyrics)
 
     def test_that_artists_list_converts_to_string(self):

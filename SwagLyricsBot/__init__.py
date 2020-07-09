@@ -1,5 +1,6 @@
 name = 'SwagLyricsBot'
 __version__ = '0.0.1'
+backend_url = 'https://api.swaglyrics.dev'
 
 
 class LyricsError(Exception):
