@@ -33,7 +33,7 @@ async def get_lyrics(song, artist, session):
     try:
         page = await fetch(session, url, raise_for_status=True)
     except aiohttp.ClientResponseError:
-        url_data = await fetch(f'{backend_url}/stripper', data={'song': song, 'artist': artist})
+        url_data = await fetch(session, f'{backend_url}/stripper', data={'song': song, 'artist': artist})
         if not url_data:
             raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
         url = f'https://genius.com/{url_data}-lyrics'
