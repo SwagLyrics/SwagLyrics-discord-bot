@@ -1,8 +1,9 @@
 import re
+import aiocfscrape
+import aiohttp
 
 from SwagLyricsBot import backend_url, LyricsNotFound
 
-import aiohttp
 from bs4 import BeautifulSoup, UnicodeDammit
 from swaglyrics.cli import stripper
 
@@ -11,8 +12,9 @@ async def fetch(session, url, **kwargs):
     """
     Uses aiohttp to make http GET requests
     """
-    async with session.get(url, **kwargs) as response:
-        return await response.text()
+    async with aiocfscrape.CloudflareScraper() as session:
+        async with session.get(url) as resp:
+            return await resp.text()
 
 
 async def get_lyrics(song, artist, session):
