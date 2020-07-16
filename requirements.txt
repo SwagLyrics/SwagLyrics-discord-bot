@@ -3,6 +3,6 @@ beautifulsoup4==4.9.1
 dblpy==0.3.4
 discord.py==1.3.4
 env-file==2020.5.9
-psutil==5.7.0
+psutil==5.7.2
 swaglyrics==1.2.0
 aiocfscrape==1.0.0
