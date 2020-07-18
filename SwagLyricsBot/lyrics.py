@@ -1,5 +1,4 @@
 import re
-import aiocfscrape
 import aiohttp
 
 from SwagLyricsBot import backend_url, LyricsNotFound
@@ -13,9 +12,8 @@ async def fetch(session, url, **kwargs):
     Uses aiohttp to make http GET requests
     """
     headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'}
-    async with aiocfscrape.CloudflareScraper(headers=headers) as session:
-        async with session.get(url) as resp:
-            return await resp.text()
+    async with session.get(url, headers=headers) as resp:
+        return await resp.text()
 
 
 async def get_lyrics(song, artist, session):
