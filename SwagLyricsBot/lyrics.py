@@ -12,7 +12,8 @@ async def fetch(session, url, **kwargs):
     """
     Uses aiohttp to make http GET requests
     """
-    async with aiocfscrape.CloudflareScraper() as session:
+    headers = {'user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'}
+    async with aiocfscrape.CloudflareScraper(headers=headers) as session:
         async with session.get(url) as resp:
             return await resp.text()
 
