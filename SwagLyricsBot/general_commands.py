@@ -2,7 +2,7 @@ import traceback
 
 import discord
 import re
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 from SwagLyricsBot import SpotifyClosed, LyricsError, ConsoleColors, NoActivityAccess, NotEnoughArguments
 from SwagLyricsBot.logs import Log
@@ -11,9 +11,10 @@ from SwagLyricsBot.lyrics import get_lyrics
 
 class GeneralCommands(commands.Cog, name="General"):
 
-    def __init__(self, bot, session):
+    def __init__(self, bot, session, current=(None, None)):
         self.bot = bot
         self.session = session
+        self.current = current
 
     @commands.command(name="help")
     async def help_message(self, ctx):
@@ -59,6 +60,17 @@ class GeneralCommands(commands.Cog, name="General"):
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
 
+    async def send_lyrics(self, ctx, song, artists, log):
+        lyrics = await get_lyrics(song, artists[0], self.session)
+        await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+        split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+        await log.add_sub_log("Split successfully. Packing into messages...")
+
+        artists_string = self.artists_to_string(artists)
+        await self.send_chunks(ctx, split_lyrics, song, artists_string)
+        await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
+        log.change_log_success_status(True)
+
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
         """
@@ -67,21 +79,8 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         log = Log(self.session)
 
-        async def send_lyrics():
-            lyrics = await get_lyrics(song, artists[0], self.session)
-            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Split successfully. Packing into messages...")
-
-            await self.send_chunks(ctx, split_lyrics, song, artists_string)
-            await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)
-
         try:
-
-            await log.add_log(
-                f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics"
-            )
+            await log.add_log(f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics")
 
             if not (song or artists):
                 await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
@@ -89,15 +88,13 @@ class GeneralCommands(commands.Cog, name="General"):
             elif artists is None:
                 raise NotEnoughArguments("Not enough arguments! For usage, check `$help`")
             else:
-                tmp = artists
-                artists = list()
-                artists.append(tmp)
+                artists = list(artists)
             artists_string = self.artists_to_string(artists)
             debug_string = f"Getting lyrics for {song} by {artists_string}"
             await log.add_sub_log(debug_string)
             await ctx.send(debug_string)
 
-            await send_lyrics()
+            await self.send_lyrics(ctx, song, artists, log)
         except LyricsError as ex:
             await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
             log.change_log_success_status(None)
@@ -109,6 +106,41 @@ class GeneralCommands(commands.Cog, name="General"):
             await ctx.send(f"There was an error while processing your request. Please try again in a few seconds.")
         finally:
             await log.send_webhook()
+
+    @tasks.loop(seconds=5)
+    async def vibe_mode(self, ctx):
+        log = Log(self.session)
+
+        try:
+            song, artists = self.get_spotify_data(ctx.author)
+
+            if (song, artists) != self.current:
+                # song changed
+                self.current = (song, artists)
+                artists_string = self.artists_to_string(artists)
+                debug_string = f"Getting lyrics for {song} by {artists_string}"
+                await log.add_sub_log(debug_string)
+                await ctx.send(debug_string)
+
+                await self.send_lyrics(ctx, song, artists, log)
+        except LyricsError as e:
+            ctx.send("No activity detected, killing da vibe.")
+            await log.add_sub_log(f"Error raised: {e}", ConsoleColors.FAIL)
+            log.change_log_success_status(None)
+            self.vibe_mode.cancel()
+        finally:
+            # what happens when song artist is same as current?
+            await log.send_webhook()
+
+    @commands.command()
+    async def vibe(self, ctx):
+        ctx.send('one vibe mode coming right up.')
+        self.vibe_mode.start()
+
+    @commands.command()
+    async def kill(self, ctx):
+        ctx.send('https://www.youtube.com/watch?v=GF8aaTu2kg0')
+        self.vibe_mode.cancel()
 
     async def send_chunks(self, ctx, chunks, song, artists):
         messages = self.pack_into_messages(chunks)
