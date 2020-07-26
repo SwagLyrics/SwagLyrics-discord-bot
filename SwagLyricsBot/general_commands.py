@@ -41,7 +41,7 @@ class GeneralCommands(commands.Cog, name="General"):
     def get_spotify_data(user):
         from SwagLyricsBot.swaglyrics_bot import find_mutual_guild
         """
-        Reads data from discord spotify activity. 
+        Reads data from discord spotify activity.
         """
         if user.dm_channel:
             print("    - Command was raised in DM, finding mutual guild with user...")
@@ -68,7 +68,7 @@ class GeneralCommands(commands.Cog, name="General"):
 
         artists_string = self.artists_to_string(artists)
         await self.send_chunks(ctx, split_lyrics, song, artists_string)
-        await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
+        await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
         log.change_log_success_status(True)
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
@@ -103,7 +103,7 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
-            await ctx.send(f"There was an error while processing your request. Please try again in a few seconds.")
+            await ctx.send("There was an error while processing your request. Please try again in a few seconds.")
         finally:
             await log.send_webhook()
 
@@ -115,7 +115,7 @@ class GeneralCommands(commands.Cog, name="General"):
             song, artists = self.get_spotify_data(ctx.author)
 
             if (song, artists) != self.current:
-                # song changed
+                # song has changed
                 self.current = (song, artists)
                 artists_string = self.artists_to_string(artists)
                 debug_string = f"Getting lyrics for {song} by {artists_string}"
@@ -134,6 +134,7 @@ class GeneralCommands(commands.Cog, name="General"):
 
     @commands.command()
     async def vibe(self, ctx):
+        # how to manage multiple instances of this?
         ctx.send('one vibe mode coming right up.')
         self.vibe_mode.start()
 
