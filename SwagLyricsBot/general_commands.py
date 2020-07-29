@@ -11,7 +11,9 @@ from SwagLyricsBot.lyrics import get_lyrics
 
 class GeneralCommands(commands.Cog, name="General"):
 
-    def __init__(self, bot, session, current=(None, None)):
+    def __init__(self, bot, session, current=None):
+        if current is None:
+            current = {}
         self.bot = bot
         self.session = session
         self.current = current
@@ -108,40 +110,57 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.send_webhook()
 
     @tasks.loop(seconds=5)
-    async def vibe_mode(self, ctx):
+    async def vibe_mode(self):
         log = Log(self.session)
-
-        try:
-            song, artists = self.get_spotify_data(ctx.author)
-
-            if (song, artists) != self.current:
+        print('this is inside the loop')
+        for user, info in self.current.items():
+            print(user.id, info)
+            channel = self.bot.get_channel(info['channel'])
+            await channel.send('ope')
+            try:
+                song, artists = self.get_spotify_data(user)
+                print(song, artists)
+                if (song, artists) == info['playing']:
+                    print("continuing")
+                    continue
                 # song has changed
-                self.current = (song, artists)
+                self.current[user]['playing'] = (song, artists)
                 artists_string = self.artists_to_string(artists)
                 debug_string = f"Getting lyrics for {song} by {artists_string}"
                 await log.add_sub_log(debug_string)
-                await ctx.send(debug_string)
+                await channel.send(debug_string)
 
-                await self.send_lyrics(ctx, song, artists, log)
-        except LyricsError as e:
-            ctx.send("No activity detected, killing da vibe.")
-            await log.add_sub_log(f"Error raised: {e}", ConsoleColors.FAIL)
-            log.change_log_success_status(None)
-            self.vibe_mode.cancel()
-        finally:
-            # what happens when song artist is same as current?
-            await log.send_webhook()
+                await self.send_lyrics(channel, song, artists, log)
+            except LyricsError as e:
+                print('bruhhuheirvberv')
+                channel.send("No activity detected, killing da vibe.")
+                await log.add_sub_log(f"Error raised: {e}", ConsoleColors.FAIL)
+                log.change_log_success_status(None)
+                del self.current[user]
+                if not self.current:
+                    self.vibe_mode.cancel()
+            finally:
+                # what happens when song artist is same as current?
+                await log.send_webhook()
 
     @commands.command()
     async def vibe(self, ctx):
-        # how to manage multiple instances of this?
-        ctx.send('one vibe mode coming right up.')
-        self.vibe_mode.start()
+        prev = self.current.copy()
+        # add current user to dict
+        self.current[ctx.author] = {'playing': (None, None),
+                                    'channel': ctx.channel.id}
+        await ctx.send('one vibe mode coming right up.')
+        print(prev)
+        if not prev:  # compare using previous current
+            print("starting loop")
+            self.vibe_mode.start()
 
     @commands.command()
     async def kill(self, ctx):
-        ctx.send('https://www.youtube.com/watch?v=GF8aaTu2kg0')
-        self.vibe_mode.cancel()
+        del self.current[ctx.author]
+        await ctx.send('https://www.youtube.com/watch?v=GF8aaTu2kg0')
+        if not self.current:
+            self.vibe_mode.cancel()
 
     async def send_chunks(self, ctx, chunks, song, artists):
         messages = self.pack_into_messages(chunks)
