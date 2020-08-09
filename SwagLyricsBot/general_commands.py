@@ -62,19 +62,21 @@ class GeneralCommands(commands.Cog, name="General"):
             raise SpotifyClosed()
         return spotify_activity[0].title, spotify_activity[0].artists
 
-    async def send_lyrics(self, ctx, song, artists):
-
+    async def send_lyrics(self, ctx, song, artists, log):
+        """
+        Wrapper around get_lyrics to parse lyrics into embeds for discord.
+        """
         lyrics = await get_lyrics(song, artists[0], self.session)
         print('got lyrics')
-        # await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+        await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
         split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
         print('split lyrics')
-        # await log.add_sub_log("Split successfully. Packing into messages...")
+        await log.add_sub_log("Split successfully. Packing into messages...")
 
         artists_string = self.artists_to_string(artists)
         await self.send_chunks(ctx, split_lyrics, song, artists_string)
-        # await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
-        # log.change_log_success_status(True)
+        await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
+        log.change_log_success_status(True)
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
     async def get_lyrics_command(self, ctx, song=None, artists=None):
@@ -96,7 +98,7 @@ class GeneralCommands(commands.Cog, name="General"):
                 artists = list(artists)
             artists_string = self.artists_to_string(artists)
             debug_string = f"Getting lyrics for {song} by {artists_string}"
-            await log.add_sub_log(debug_string)
+            await log.add_log(debug_string)
             await ctx.send(debug_string)
 
             await self.send_lyrics(ctx, song, artists, log)
@@ -114,29 +116,29 @@ class GeneralCommands(commands.Cog, name="General"):
 
     @tasks.loop(seconds=5)
     async def vibe_mode(self):
-        print('this is inside the loop')
+        """
+        Loop to continuously send lyrics as song updates.
+        Killed using $kill or no Spotify activity
+        """
+        log = Log(self.session)
+
         for user, info in self.current.items():
-            print(user.id, info)
-            channel = self.bot.get_channel(info['channel'])
-            await channel.send('ope')
             try:
                 song, artists = self.get_spotify_data(user)
                 print(song, artists)
-                if (song, artists) == info['playing']:
-                    print("continuing")
+                if (song, artists) == info:
                     continue
                 # song has changed
-                self.current[user]['playing'] = (song, artists)
+                self.current[user] = (song, artists)
                 artists_string = self.artists_to_string(artists)
                 debug_string = f"Getting lyrics for {song} by {artists_string}"
-                # await log.add_sub_log(debug_string)
-                print('sending lyrics bb')
-                await channel.send(debug_string)
+                await log.add_log(debug_string)
+                await user.send(debug_string)
 
-                await self.send_lyrics(channel, song, artists)
-            except LyricsError as e:
+                await self.send_lyrics(user, song, artists, log)
+            except LyricsError:
                 print('No activity detected, stopping loop.')
-                await channel.send("No activity detected, killing the vibe.")
+                await user.send("No activity detected, killing the vibe.")
                 del self.current[user]
                 if not self.current:
                     print('stopping loop')
@@ -144,24 +146,35 @@ class GeneralCommands(commands.Cog, name="General"):
 
     @commands.command()
     async def vibe(self, ctx):
-        prev = self.current.copy()
-        # add current user to dict
-        self.current[ctx.author] = {'playing': (None, None),
-                                    'channel': ctx.channel.id}
-        await ctx.send('one vibe mode coming right up.')
-        print(prev)
-        if not prev:  # compare using previous current
-            print("starting loop")
-            self.vibe_mode.start()
+        """
+        Starts vibe_mode loop if called in user DMs
+        """
+        # check if DMs
+        if not ctx.guild:
+            if ctx.author not in self.current.keys():
+                # add current user to dict
+                self.current[ctx.author] = (None, None)
+                await ctx.send('one vibe mode coming right up.')
+                if len(self.current) == 1:
+                    self.vibe_mode.start()
+            else:
+                await ctx.send("you're already vibing ;)")
+        else:
+            # DMs only to prevent spam
+            await ctx.send('$vibe in DMs only 👀')
 
     @commands.command()
     async def kill(self, ctx):
-        del self.current[ctx.author]
-        print('killed vibe')
-        await ctx.send('https://www.youtube.com/watch?v=GF8aaTu2kg0')
-        if not self.current:
-            print('stopping loop')
-            self.vibe_mode.cancel()
+        if not ctx.guild:
+            del self.current[ctx.author]
+            print('killed vibe')
+            await ctx.send('killed the vibe ✊🏻')
+            if not self.current:
+                print('stopping loop')
+                self.vibe_mode.cancel()
+        else:
+            # DMs only to prevent spam
+            await ctx.send('$kill in DMs only bb.')
 
     async def send_chunks(self, ctx, chunks, song, artists):
         messages = self.pack_into_messages(chunks)
