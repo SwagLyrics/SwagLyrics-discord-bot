@@ -40,7 +40,7 @@ class GeneralCommands(commands.Cog, name="General"):
     def get_spotify_data(user):
         from SwagLyricsBot.swaglyrics_bot import find_mutual_guild
         """
-        Reads data from discord spotify activity. 
+        Reads data from discord spotify activity.
         """
         if user.dm_channel:
             print("    - Command was raised in DM, finding mutual guild with user...")
@@ -74,7 +74,7 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log("Split successfully. Packing into messages...")
 
             await self.send_chunks(ctx, split_lyrics, song, artists_string)
-            await log.add_sub_log(f"Lyrics sent successfully.", ConsoleColors.OKGREEN)
+            await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
             log.change_log_success_status(True)
 
         try:
@@ -88,10 +88,8 @@ class GeneralCommands(commands.Cog, name="General"):
                     await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
                     song, artists = self.get_spotify_data(ctx.author)
                 if member:
-                    await log.add_sub_log(f"User mentioned {member} and song data was not provided, trying to fetch it automatically...")
-                    song, artists = self.get_spotify_data(member)
-                    
-                    
+                    await log.add_sub_log(f"Mentioned {member} & song data was not provided, trying to fetch it automatically...")
+                    song, artists = self.get_spotify_data(member)     
             elif artists is None:
                 raise NotEnoughArguments("Not enough arguments! For usage, check `$help`")
             else:
@@ -112,7 +110,7 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
-            await ctx.send(f"There was an error while processing your request. Please try again in a few seconds.")
+            await ctx.send("There was an error while processing your request. Please try again in a few seconds.")
         finally:
             await log.send_webhook()
 
