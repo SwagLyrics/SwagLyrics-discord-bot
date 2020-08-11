@@ -88,10 +88,10 @@ class GeneralCommands(commands.Cog, name="General"):
                     await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
                     song, artists = self.get_spotify_data(ctx.author)
                 if member:
+                    song, artists = self.get_spotify_data(member) 
                     await log.add_sub_log(
                         f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
                     )
-                    song, artists = self.get_spotify_data(member) 
             elif artists is None:
                 raise NotEnoughArguments("Not enough arguments! For usage, check `$help`")
             else:
