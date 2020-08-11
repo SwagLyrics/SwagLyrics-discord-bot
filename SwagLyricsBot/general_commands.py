@@ -1,5 +1,5 @@
 import traceback
-
+import typing
 import discord
 import re
 from discord.ext import commands
@@ -60,7 +60,7 @@ class GeneralCommands(commands.Cog, name="General"):
         return spotify_activity[0].title, spotify_activity[0].artists
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
-    async def get_lyrics_command(self, ctx, song=None, artists=None):
+    async def get_lyrics_command(self, ctx, member: typing.Optional[discord.Member], song=None, artists=None):
         """
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
@@ -84,8 +84,14 @@ class GeneralCommands(commands.Cog, name="General"):
             )
 
             if not (song or artists):
-                await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
-                song, artists = self.get_spotify_data(ctx.author)
+                if not member:
+                    await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
+                    song, artists = self.get_spotify_data(ctx.author)
+                if member:
+                    await log.add_sub_log(f"User mentioned {member} and song data was not provided, trying to fetch it automatically...")
+                    song, artists = self.get_spotify_data(member)
+                    
+                    
             elif artists is None:
                 raise NotEnoughArguments("Not enough arguments! For usage, check `$help`")
             else:
