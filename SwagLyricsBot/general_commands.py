@@ -1,5 +1,5 @@
 import traceback
-
+import typing
 import discord
 import re
 from discord.ext import commands, tasks
@@ -79,19 +79,35 @@ class GeneralCommands(commands.Cog, name="General"):
         log.change_log_success_status(True)
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
-    async def get_lyrics_command(self, ctx, song=None, artists=None):
+    async def get_lyrics_command(self, ctx, member: typing.Optional[discord.Member], song=None, artists=None):
         """
         Gets lyrics for music you are currently listening to on Spotify.
         Song can be specified as command arguments.
         """
         log = Log(self.session)
 
+        async def send_lyrics():
+            lyrics = await get_lyrics(song, artists[0], self.session)
+            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+            await log.add_sub_log("Split successfully. Packing into messages...")
+
+            await self.send_chunks(ctx, split_lyrics, song, artists_string)
+            await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
+            log.change_log_success_status(True)
+
         try:
             await log.add_log(f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics")
 
             if not (song or artists):
-                await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
-                song, artists = self.get_spotify_data(ctx.author)
+                if not member:
+                    await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
+                    song, artists = self.get_spotify_data(ctx.author)
+                if member:
+                    song, artists = self.get_spotify_data(member) 
+                    await log.add_sub_log(
+                        f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
+                    )
             elif artists is None:
                 raise NotEnoughArguments("Not enough arguments! For usage, check `$help`")
             else:
@@ -110,7 +126,9 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
-            await ctx.send("There was an error while processing your request. Please try again in a few seconds.")
+
+            await ctx.send("There was an error while processing your request. Please try again in a few seconds. \n"
+            "If the error persists, please shout at us at https://discord.swaglyrics.dev.")
         finally:
             await log.send_webhook()
 
