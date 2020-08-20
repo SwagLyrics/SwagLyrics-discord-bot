@@ -67,10 +67,8 @@ class GeneralCommands(commands.Cog, name="General"):
         Wrapper around get_lyrics to parse lyrics into embeds for discord.
         """
         lyrics = await get_lyrics(song, artists[0], self.session)
-        print('got lyrics')
         await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
         split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-        print('split lyrics')
         await log.add_sub_log("Split successfully. Packing into messages...")
 
         artists_string = self.artists_to_string(artists)
@@ -85,16 +83,6 @@ class GeneralCommands(commands.Cog, name="General"):
         Song can be specified as command arguments.
         """
         log = Log(self.session)
-
-        async def send_lyrics():
-            lyrics = await get_lyrics(song, artists[0], self.session)
-            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Split successfully. Packing into messages...")
-
-            await self.send_chunks(ctx, split_lyrics, song, artists_string)
-            await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)
 
         try:
             await log.add_log(f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics")
@@ -127,8 +115,8 @@ class GeneralCommands(commands.Cog, name="General"):
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
 
-            await ctx.send("There was an error while processing your request. Please try again in a few seconds. \n"
-            "If the error persists, please shout at us at https://discord.swaglyrics.dev.")
+            await ctx.send("There was an error while processing your request. Please try again in a few seconds. \n "
+                           "If the error persists, please shout at us at https://discord.swaglyrics.dev.")
         finally:
             await log.send_webhook()
 
@@ -143,7 +131,6 @@ class GeneralCommands(commands.Cog, name="General"):
         for user, info in self.current.items():
             try:
                 song, artists = self.get_spotify_data(user)
-                print(song, artists)
                 if (song, artists) == info:
                     continue
                 # song has changed
@@ -162,7 +149,7 @@ class GeneralCommands(commands.Cog, name="General"):
                     print('stopping loop')
                     self.vibe_mode.cancel()
 
-    @commands.command()
+    @commands.command(name="vibe", aliases=["loop"])
     async def vibe(self, ctx):
         """
         Starts vibe_mode loop if called in user DMs
@@ -172,11 +159,12 @@ class GeneralCommands(commands.Cog, name="General"):
             if ctx.author not in self.current.keys():
                 # add current user to dict
                 self.current[ctx.author] = (None, None)
-                await ctx.send('one vibe mode coming right up.')
+                print(f"added {str(ctx.author)} to loop")
+                await ctx.send('One vibe mode coming right up.')
                 if len(self.current) == 1:
                     self.vibe_mode.start()
             else:
-                await ctx.send("you're already vibing ;)")
+                await ctx.send("You're already vibing ;)")
         else:
             # DMs only to prevent spam
             await ctx.send('$vibe in DMs only 👀')
@@ -185,8 +173,8 @@ class GeneralCommands(commands.Cog, name="General"):
     async def kill(self, ctx):
         if not ctx.guild:
             del self.current[ctx.author]
-            print('killed vibe')
-            await ctx.send('killed the vibe ✊🏻')
+            print(f'killed vibe for {ctx.author}')
+            await ctx.send('Killed the vibe ✊🏻')
             if not self.current:
                 print('stopping loop')
                 self.vibe_mode.cancel()
