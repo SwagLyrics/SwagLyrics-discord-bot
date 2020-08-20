@@ -9,6 +9,7 @@ from SwagLyricsBot.dev_commands import DevCommands
 from SwagLyricsBot.general_commands import GeneralCommands
 from SwagLyricsBot.links_commands import LinksCommands
 from SwagLyricsBot.topGG import TopGG
+import discord
 
 bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=None)
 
@@ -27,6 +28,15 @@ def find_mutual_guild(user_id):
 async def on_ready():
     print("Bot is up and running. Waiting for actions.")
     await bot.change_presence(activity=Activity(type=ActivityType.watching, name="you type $sl"))
+
+
+@bot.event
+async def on_guild_join(guild):
+    channel = guild.system_channel
+    embed = discord.Embed(
+        title="Hello!",
+        description="""Hello, Thanks for adding SwagLyrics. Type `$help` to check all the commands you can use.""")
+    await channel.send(embed=embed)
 
 
 async def run():
