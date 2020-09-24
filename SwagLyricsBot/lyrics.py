@@ -1,5 +1,4 @@
 import re
-import aiohttp
 
 from SwagLyricsBot import backend_url, LyricsNotFound
 
@@ -11,7 +10,10 @@ async def fetch(session, url, **kwargs):
     """
     Uses aiohttp to make http GET requests
     """
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'}
+    headers = {
+        'User-Agent': 
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'
+    }
     async with session.get(url, headers=headers, **kwargs) as resp:
         return await resp.text()
 
@@ -39,9 +41,8 @@ async def get_lyrics(song, artist, session):
         raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
     url = f'https://genius.com/{url_data}-lyrics'
     page = await fetch(session, url)
-        # page = await fetch(session, url, raise_for_status=True)
+    #    page = await fetch(session, url, raise_for_status=True)
     # except aiohttp.ClientResponseError:
-        
 
     html = BeautifulSoup(page, "html.parser")
     lyrics_path = html.find("div", class_="lyrics")  # finding div on Genius containing the lyrics
