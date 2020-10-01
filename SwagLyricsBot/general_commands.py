@@ -68,13 +68,14 @@ class GeneralCommands(commands.Cog, name="General"):
         log = Log(self.session)
 
         async def send_lyrics():
-            lyrics = await get_lyrics(song, artists[0], self.session)
-            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Split successfully. Packing into messages...")
+            async with ctx.channel.typing():
+                lyrics = await get_lyrics(song, artists[0], self.session)
+                await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+                split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+                await log.add_sub_log("Split successfully. Packing into messages...")
 
-            await self.send_chunks(ctx, split_lyrics, song, artists_string)
-            await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
+                await self.send_chunks(ctx, split_lyrics, song, artists_string)
+                await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
             log.change_log_success_status(True)
 
         try:
