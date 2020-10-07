@@ -3,7 +3,7 @@ from discord.ext import commands
 
 class LinksCommands(commands.Cog, name="Links"):
 
-    @commands.command(name="github")
+    @commands.command(name="github", aliases=["gh"])
     async def github(self, ctx):
         """
         Sends bot github link
