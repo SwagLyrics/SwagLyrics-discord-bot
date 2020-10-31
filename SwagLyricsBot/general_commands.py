@@ -84,16 +84,16 @@ class GeneralCommands(commands.Cog, name="General"):
             )
 
             if not (song or artists):
-                if not member:
-                    await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
-                    song, artists = self.get_spotify_data(ctx.author)
-                if member:
-                    song, artists = self.get_spotify_data(member) 
-                    await log.add_sub_log(
-                        f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
-                    )
-            elif artists is None:
-                raise NotEnoughArguments("Not enough arguments! For usage, check `$help`")
+                #if not member:
+                    #await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
+                    #song, artists = self.get_spotify_data(ctx.author)
+                #if member:
+                    #song, artists = self.get_spotify_data(member) 
+                    #await log.add_sub_log(
+                        #f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
+                    #)
+            #elif artists is None:
+                raise NotEnoughArguments("Due to Discord Intents update, we need to request access to Spotify data from Discord. Please specify song and artist until Discord enables it for us. Sorry for inconvenience! For usage, check `$help`")
             else:
                 tmp = artists
                 artists = list()
