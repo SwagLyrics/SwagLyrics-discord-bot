@@ -10,7 +10,8 @@ from SwagLyricsBot.general_commands import GeneralCommands
 from SwagLyricsBot.links_commands import LinksCommands
 from SwagLyricsBot.topGG import TopGG
 
-bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=None)
+bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=None,
+                   allowed_mentions=discord.AllowedMentions(roles=False, users=False, everyone=False)
 
 
 def find_mutual_guild(user_id):
