@@ -1,5 +1,4 @@
 import re
-import aiohttp
 
 from SwagLyricsBot import backend_url, LyricsNotFound
 
@@ -11,7 +10,10 @@ async def fetch(session, url, **kwargs):
     """
     Uses aiohttp to make http GET requests
     """
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'}
+    headers = {
+        'User-Agent': 
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'
+    }
     async with session.get(url, headers=headers, **kwargs) as resp:
         return await resp.text()
 
@@ -31,14 +33,16 @@ async def get_lyrics(song, artist, session):
         return None  # url path had either song in non-latin, artist in non-latin, or both
     url = f'https://genius.com/{url_data}-lyrics'  # format the url with the url path
 
-    try:
-        page = await fetch(session, url, raise_for_status=True)
-    except aiohttp.ClientResponseError:
-        url_data = await fetch(session, f'{backend_url}/stripper', data={'song': song, 'artist': artist})
-        if not url_data:
-            raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
-        url = f'https://genius.com/{url_data}-lyrics'
-        page = await fetch(session, url)
+    # try:
+    # HOTFIX for failed requests for non-exact matches not being passed to the backend issue
+    # passes thru all requests to the backend first and then uses the stripper from there
+    url_data = await fetch(session, f'{backend_url}/stripper', data={'song': song, 'artist': artist})
+    if not url_data:
+        raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
+    url = f'https://genius.com/{url_data}-lyrics'
+    page = await fetch(session, url)
+    #    page = await fetch(session, url, raise_for_status=True)
+    # except aiohttp.ClientResponseError:
 
     html = BeautifulSoup(page, "html.parser")
     lyrics_path = html.find("div", class_="lyrics")  # finding div on Genius containing the lyrics
