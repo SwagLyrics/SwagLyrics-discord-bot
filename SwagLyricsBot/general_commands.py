@@ -94,6 +94,8 @@ class GeneralCommands(commands.Cog, name="General"):
                     #)
             #elif artists is None:
                 raise NotEnoughArguments("Due to Discord Intents update, we need to request access to Spotify data from Discord. Please specify song and artist until Discord enables it for us. Sorry for inconvenience! For usage, check `$help`")
+            elif not (song and artists):
+                raise NotEnoughArguments("Not enough arguments! For usage check $help")
             else:
                 tmp = artists
                 artists = list()
