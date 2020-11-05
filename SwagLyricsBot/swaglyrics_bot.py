@@ -1,6 +1,6 @@
 import aiohttp
 import env_file
-from discord import Activity, ActivityType
+from discord import Activity, ActivityType, AllowedMentions
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 
@@ -10,7 +10,7 @@ from SwagLyricsBot.general_commands import GeneralCommands
 from SwagLyricsBot.links_commands import LinksCommands
 from SwagLyricsBot.topGG import TopGG
 
-bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=None)
+bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=None, allowed_mentions=AllowedMentions.none())
 
 
 def find_mutual_guild(user_id):
