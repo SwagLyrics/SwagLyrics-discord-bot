@@ -38,10 +38,10 @@ async def run():
         bot.add_cog(DevCommands(bot))
         bot.add_cog(GeneralCommands(bot, session))
         bot.add_cog(LinksCommands(bot))
-        if 'DBL_TOKEN' in token:
-            bot.add_cog(TopGG(bot, token['DBL_TOKEN']))
-        if 'WEBHOOK_URL' in token:
-            logs.webhook_url = token['WEBHOOK_URL']
-        if 'WEBHOOK_ERROR_SUPERVISOR_ID' in token:
-            logs.error_supervisor = token['WEBHOOK_ERROR_SUPERVISOR_ID']
-        await bot.start(token['BOT_TOKEN'])
+        if "DBL_TOKEN" in token:
+            bot.add_cog(TopGG(bot, token["DBL_TOKEN"]))
+        if "WEBHOOK_URL" in token:
+            logs.webhook_url = token["WEBHOOK_URL"]
+        if "WEBHOOK_ERROR_SUPERVISOR_ID" in token:
+            logs.error_supervisor = token["WEBHOOK_ERROR_SUPERVISOR_ID"]
+        await bot.start(token["BOT_TOKEN"])
