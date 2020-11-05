@@ -31,7 +31,8 @@ async def get_lyrics(song, artist, session):
     """
     url_data = stripper(song, artist)  # generate url path using stripper()
     if url_data.startswith("-") or url_data.endswith("-"):
-        return None  # url path had either song in non-latin, artist in non-latin, or both
+        # url path had either song in non-latin, artist in non-latin, or both
+        raise LyricsNotFound(f"Lyrics for {song} by {artist} not found on Genius.")
     url = f"https://genius.com/{url_data}-lyrics"  # format the url with the url path
 
     try:
