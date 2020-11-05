@@ -10,7 +10,6 @@ from SwagLyricsBot.lyrics import get_lyrics
 
 
 class GeneralCommands(commands.Cog, name="General"):
-
     def __init__(self, bot, session):
         self.bot = bot
         self.session = session
@@ -21,12 +20,17 @@ class GeneralCommands(commands.Cog, name="General"):
         Sends help message
         """
 
-        embed = discord.Embed(title="SwagLyrics Help", description="Thank you for using SwagLyrics! Here are the "
-                                                                   "commands you can use:")
+        embed = discord.Embed(
+            title="SwagLyrics Help", description="Thank you for using SwagLyrics! Here are the commands you can use:"
+        )
 
-        embed.add_field(name="`$sl` or `$swaglyrics`", value='Automatically get lyrics for music you are currently '
-                        'listening to on Spotify. Optionally, to get lyrics for a specific song, use '
-                        '`$sl [song] [artist]`. \nEg. `$sl "In The End" "Linkin Park"`', inline=False)
+        embed.add_field(
+            name="`$sl` or `$swaglyrics`",
+            value="Automatically get lyrics for music you are currently "
+            "listening to on Spotify. Optionally, to get lyrics for a specific song, use "
+            '`$sl [song] [artist]`. \nEg. `$sl "In The End" "Linkin Park"`',
+            inline=False,
+        )
         embed.add_field(name="`$invite` or `$topgg`", value="Link to the bot's top.gg page", inline=False)
         embed.add_field(name="`$vote`", value="Link to the bot's top.gg page but nicer", inline=False)
         embed.add_field(name="`$help`", value="Show this message", inline=False)
@@ -39,6 +43,7 @@ class GeneralCommands(commands.Cog, name="General"):
     @staticmethod
     def get_spotify_data(user):
         from SwagLyricsBot.swaglyrics_bot import find_mutual_guild
+
         """
         Reads data from discord spotify activity.
         """
@@ -50,8 +55,10 @@ class GeneralCommands(commands.Cog, name="General"):
                 user = guild.get_member(user.id)
             else:
                 print("    - User was not found in any guild.")
-                raise NoActivityAccess("I can't access your Spotify data. Make sure to be a member of guild I belong "
-                                       "to. Feel free to join our official server https://discord.swaglyrics.dev")
+                raise NoActivityAccess(
+                    "I can't access your Spotify data. Make sure to be a member of guild I belong "
+                    "to. Feel free to join our official server https://discord.swaglyrics.dev"
+                )
 
         # read spotify activity if exists
         spotify_activity = [activity for activity in user.activities if isinstance(activity, discord.Spotify)]
@@ -60,10 +67,10 @@ class GeneralCommands(commands.Cog, name="General"):
         return spotify_activity[0].title, spotify_activity[0].artists
 
     @commands.command(name="swaglyrics", aliases=["sl", "lyrics"])
-    async def get_lyrics_command(self, ctx, member: typing.Optional[discord.Member], song=None, artists=None):
+    async def get_lyrics_command(self, ctx, member: typing.Optional[discord.Member], *, params=None):
         """
         Gets lyrics for music you are currently listening to on Spotify.
-        Song can be specified as command arguments.
+        Song can be specified as command argument separated by two commas.
         """
         log = Log(self.session)
 
@@ -79,21 +86,39 @@ class GeneralCommands(commands.Cog, name="General"):
 
         try:
 
-            await log.add_log(
-                f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics"
-            )
+            await log.add_log(f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics")
+
+            if not params:
+                raise NotEnoughArguments(
+                    "Due to Discord Intents update, we need to request access to Spotify data from Discord. "
+                    "Please specify song and artist until Discord enables it for us. Sorry for inconvenience!"
+                    " For usage, check `$help`"
+                )
+
+            try:
+                song, artists = (x.strip() for x in params.split(",,", 1))  # split on ,,
+            except ValueError:
+                raise NotEnoughArguments(
+                    "Please separate the song name and artist with 2 commas, "
+                    "like `$sl do I wanna know ,, arctic monkeys`. \n"
+                    "We think this is easier than the previous method :)"
+                )
 
             if not (song or artists):
-                #if not member:
-                    #await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
-                    #song, artists = self.get_spotify_data(ctx.author)
-                #if member:
-                    #song, artists = self.get_spotify_data(member) 
-                    #await log.add_sub_log(
-                        #f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
-                    #)
-            #elif artists is None:
-                raise NotEnoughArguments("Due to Discord Intents update, we need to request access to Spotify data from Discord. Please specify song and artist until Discord enables it for us. Sorry for inconvenience! For usage, check `$help`")
+                # if not member:
+                # await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
+                # song, artists = self.get_spotify_data(ctx.author)
+                # if member:
+                # song, artists = self.get_spotify_data(member)
+                # await log.add_sub_log(
+                # f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
+                # )
+                # elif artists is None:
+                raise NotEnoughArguments(
+                    "Due to Discord Intents update, we need to request access to Spotify data from Discord. "
+                    "Please specify song and artist until Discord enables it for us. Sorry for inconvenience!"
+                    " For usage, check `$help`"
+                )
             elif not (song and artists):
                 raise NotEnoughArguments("Not enough arguments! For usage check $help")
             else:
@@ -114,8 +139,10 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
             print(traceback.print_exception(type(ex), ex, ex.__traceback__))
             log.change_log_success_status(False)
-            await ctx.send("There was an error while processing your request. Please try again in a few seconds. \n"
-            "If the error persists, please shout at us at https://discord.swaglyrics.dev.")
+            await ctx.send(
+                "There was an error while processing your request. Please try again in a few seconds. \n"
+                "If the error persists, please shout at us at https://discord.swaglyrics.dev."
+            )
         finally:
             await log.send_webhook()
 
@@ -126,7 +153,7 @@ class GeneralCommands(commands.Cog, name="General"):
             embed = discord.Embed()
             embed.title = f"{song} by {artists}" if i == 0 else ""
             for chunk in message:
-                embed.add_field(name=u"\u200C", value=chunk, inline=False)
+                embed.add_field(name="\u200C", value=chunk, inline=False)
             await ctx.send(embed=embed)
             i += 1
 
@@ -169,7 +196,7 @@ class GeneralCommands(commands.Cog, name="General"):
         chunk = ""
         chunks = list()
         last_char = None
-        only_new_lines = r'^(\n)+$'
+        only_new_lines = r"^(\n)+$"
         for char in string:
             if len(chunk) + 150 > chunk_size and char == "\n" or (last_char == "\n" and char == "\n"):
                 # In case of 3 or more newlines, and ignore chunks with only newlines
