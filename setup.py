@@ -13,20 +13,10 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/flabbet/SwagLyrics-discord-bot",
-    packages=['SwagLyricsBot'],
-    install_requires=[
-        'swaglyrics',
-        'discord',
-        'env_file'
-    ],
-    extras_require={
-        'dev': [
-            'pytest',
-            'codecov',
-            'pytest-cov'
-        ]
-    },
-    keywords='discord bot swaglyrics lyrics',
+    packages=["SwagLyricsBot"],
+    install_requires=["swaglyrics", "discord", "env_file"],
+    extras_require={"dev": ["pytest", "codecov", "pytest-cov"]},
+    keywords="discord bot swaglyrics lyrics",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
