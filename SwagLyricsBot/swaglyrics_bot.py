@@ -1,14 +1,18 @@
+import os
+
 import aiohttp
-import env_file
 from discord import Activity, ActivityType, AllowedMentions
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
+from dotenv import load_dotenv
 
 from SwagLyricsBot import logs
 from SwagLyricsBot.dev_commands import DevCommands
 from SwagLyricsBot.general_commands import GeneralCommands
 from SwagLyricsBot.links_commands import LinksCommands
 from SwagLyricsBot.topGG import TopGG
+
+load_dotenv()  # load env vars
 
 bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=None, allowed_mentions=AllowedMentions.none())
 
@@ -34,14 +38,11 @@ async def run():
     Bot setup
     """
     async with aiohttp.ClientSession() as session:
-        token = env_file.get()
         bot.add_cog(DevCommands(bot))
         bot.add_cog(GeneralCommands(bot, session))
         bot.add_cog(LinksCommands(bot))
-        if "DBL_TOKEN" in token:
-            bot.add_cog(TopGG(bot, token["DBL_TOKEN"]))
-        if "WEBHOOK_URL" in token:
-            logs.webhook_url = token["WEBHOOK_URL"]
-        if "WEBHOOK_ERROR_SUPERVISOR_ID" in token:
-            logs.error_supervisor = token["WEBHOOK_ERROR_SUPERVISOR_ID"]
-        await bot.start(token["BOT_TOKEN"])
+        if os.getenv("DBL_TOKEN"):
+            bot.add_cog(TopGG(bot, os.getenv("DBL_TOKEN")))
+        logs.webhook_url = os.getenv("WEBHOOK_URL")  # None if not set
+        logs.error_supervisor = os.getenv("WEBHOOK_ERROR_SUPERVISOR_ID")
+        await bot.start(os.environ["BOT_TOKEN"])
