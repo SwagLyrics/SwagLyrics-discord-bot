@@ -137,6 +137,7 @@ class GeneralCommands(commands.Cog, name="General"):
             embed.title = f"{song} by {artists}" if i == 0 else ""
             for chunk in message:
                 embed.add_field(name="\u200C", value=chunk, inline=False)
+            embed.set_footer(text="P.S. simply typing $sl works again!")
             await ctx.send(embed=embed)
             i += 1
 
