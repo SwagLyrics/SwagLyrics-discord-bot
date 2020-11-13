@@ -108,7 +108,6 @@ class GeneralCommands(commands.Cog, name="General"):
                         "like `$sl do I wanna know ,, arctic monkeys`. \n"
                         "We think this is easier than the previous method :)"
                     )
-            artists = [artists]
             artists_string = self.artists_to_string(artists)
             debug_string = f"Getting lyrics for {song} by {artists_string}"
             await log.add_sub_log(debug_string)
@@ -164,9 +163,7 @@ class GeneralCommands(commands.Cog, name="General"):
         if len(artists) == 0:
             return ""
         str1 = artists[0]
-        for artist in artists:
-            if artist == str1:
-                continue
+        for artist in artists[1:]:
             str1 += ", " + artist
         return str1
 

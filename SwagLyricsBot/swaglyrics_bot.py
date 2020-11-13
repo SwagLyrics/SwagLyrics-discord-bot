@@ -16,6 +16,7 @@ load_dotenv()  # load env vars
 
 intents = Intents.default()
 intents.presences = True
+intents.members = True
 
 bot = commands.Bot(
     command_prefix=when_mentioned_or("$"), help_command=None, intents=intents, allowed_mentions=AllowedMentions.none()
