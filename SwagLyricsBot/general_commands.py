@@ -89,42 +89,26 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_log(f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics")
 
             if not params:
-                raise NotEnoughArguments(
-                    "Due to Discord Intents update, we need to request access to Spotify data from Discord. "
-                    "Please specify song and artist until Discord enables it for us. Sorry for inconvenience!"
-                    " For usage, check `$help`"
-                )
-
-            try:
-                song, artists = (x.strip() for x in params.split(",,", 1))  # split on ,,
-            except ValueError:
-                raise NotEnoughArguments(
-                    "Please separate the song name and artist with 2 commas, "
-                    "like `$sl do I wanna know ,, arctic monkeys`. \n"
-                    "We think this is easier than the previous method :)"
-                )
-
-            if not (song or artists):
-                # if not member:
-                # await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
-                # song, artists = self.get_spotify_data(ctx.author)
-                # if member:
-                # song, artists = self.get_spotify_data(member)
-                # await log.add_sub_log(
-                # f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
-                # )
-                # elif artists is None:
-                raise NotEnoughArguments(
-                    "Due to Discord Intents update, we need to request access to Spotify data from Discord. "
-                    "Please specify song and artist until Discord enables it for us. Sorry for inconvenience!"
-                    " For usage, check `$help`"
-                )
-            elif not (song and artists):
-                raise NotEnoughArguments("Not enough arguments! For usage check $help")
+                if not member:
+                    await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
+                    song, artists = self.get_spotify_data(ctx.author)
+                if member:
+                    song, artists = self.get_spotify_data(member)
+                    await log.add_sub_log(
+                        f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
+                    )
             else:
-                tmp = artists
-                artists = list()
-                artists.append(tmp)
+                try:
+                    song, artists = (x.strip() for x in params.split(",,", 1))  # split on ,,
+                    if not (song and artists):
+                        raise NotEnoughArguments("Not enough arguments! For usage check $help")
+                except ValueError:
+                    raise NotEnoughArguments(
+                        "Please separate the song name and artist with 2 commas, "
+                        "like `$sl do I wanna know ,, arctic monkeys`. \n"
+                        "We think this is easier than the previous method :)"
+                    )
+            artists = [artists]
             artists_string = self.artists_to_string(artists)
             debug_string = f"Getting lyrics for {song} by {artists_string}"
             await log.add_sub_log(debug_string)
