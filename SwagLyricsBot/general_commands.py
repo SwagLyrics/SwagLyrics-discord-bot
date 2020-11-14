@@ -74,16 +74,6 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         log = Log(self.session)
 
-        async def send_lyrics():
-            lyrics = await get_lyrics(song, artists[0], self.session)
-            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Split successfully. Packing into messages...")
-
-            await self.send_chunks(ctx, split_lyrics, song, artists_string)
-            await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)
-
         try:
 
             await log.add_log(f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics")
@@ -92,7 +82,7 @@ class GeneralCommands(commands.Cog, name="General"):
                 if not member:
                     await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
                     song, artists = self.get_spotify_data(ctx.author)
-                if member:
+                else:
                     song, artists = self.get_spotify_data(member)
                     await log.add_sub_log(
                         f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
@@ -113,14 +103,14 @@ class GeneralCommands(commands.Cog, name="General"):
             await log.add_sub_log(debug_string)
             await ctx.send(debug_string)
 
-            await send_lyrics()
-        except LyricsError as ex:
-            await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
+            await self.send_lyrics(ctx, song, artists, log)
+        except LyricsError as e:
+            await log.add_sub_log(f"Error raised: {e}", ConsoleColors.FAIL)
             log.change_log_success_status(None)
-            await ctx.send(ex)
-        except Exception as ex:
-            await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
-            print(traceback.print_exception(type(ex), ex, ex.__traceback__))
+            await ctx.send(e)
+        except Exception as e:
+            await log.add_sub_log(f"Error: {e}", ConsoleColors.FAIL, True)
+            print(traceback.print_exception(type(e), e, e.__traceback__))
             log.change_log_success_status(False)
             await ctx.send(
                 "There was an error while processing your request. Please try again in a few seconds. \n"
@@ -128,6 +118,16 @@ class GeneralCommands(commands.Cog, name="General"):
             )
         finally:
             await log.send_webhook()
+
+    async def send_lyrics(self, ctx, song, artists, log):
+        lyrics = await get_lyrics(song, artists[0], self.session)
+        await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+        split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+        await log.add_sub_log("Split successfully. Packing into messages...")
+
+        await self.send_chunks(ctx, split_lyrics, song, self.artists_to_string(artists))
+        await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
+        log.change_log_success_status(True)
 
     async def send_chunks(self, ctx, chunks, song, artists):
         messages = self.pack_into_messages(chunks)
