@@ -28,7 +28,7 @@ class GeneralCommands(commands.Cog, name="General"):
             name="`$sl` or `$swaglyrics`",
             value="Automatically get lyrics for music you are currently "
             "listening to on Spotify. Optionally, to get lyrics for a specific song, use "
-            "`$sl [song] ,, [artist]`. \nEg. `$sl In The End ,, Linkin Park`",
+            "`$sl song ,, artist`. \nEg. `$sl In The End ,, Linkin Park`",
             inline=False,
         )
         embed.add_field(name="`$invite` or `$topgg`", value="Link to the bot's top.gg page", inline=False)
@@ -95,8 +95,7 @@ class GeneralCommands(commands.Cog, name="General"):
                 except ValueError:
                     raise NotEnoughArguments(
                         "Please separate the song name and artist with 2 commas, "
-                        "like `$sl do I wanna know ,, arctic monkeys`. \n"
-                        "We think this is easier than the previous method :)"
+                        "like `$sl do I wanna know ,, arctic monkeys`."
                     )
             artists_string = self.artists_to_string(artists)
             debug_string = f"Getting lyrics for {song} by {artists_string}"
