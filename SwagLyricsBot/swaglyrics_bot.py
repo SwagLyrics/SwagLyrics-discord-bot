@@ -1,7 +1,7 @@
 import os
 
 import aiohttp
-from discord import Activity, ActivityType, AllowedMentions
+from discord import Activity, ActivityType, AllowedMentions, Intents
 from discord.ext import commands
 from discord.ext.commands import when_mentioned_or
 from dotenv import load_dotenv
@@ -14,7 +14,13 @@ from SwagLyricsBot.topGG import TopGG
 
 load_dotenv()  # load env vars
 
-bot = commands.Bot(command_prefix=when_mentioned_or("$"), help_command=None, allowed_mentions=AllowedMentions.none())
+intents = Intents.default()
+intents.presences = True
+intents.members = True
+
+bot = commands.Bot(
+    command_prefix=when_mentioned_or("$"), help_command=None, intents=intents, allowed_mentions=AllowedMentions.none()
+)
 
 
 def find_mutual_guild(user_id):

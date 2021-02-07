@@ -28,7 +28,7 @@ class GeneralCommands(commands.Cog, name="General"):
             name="`$sl` or `$swaglyrics`",
             value="Automatically get lyrics for music you are currently "
             "listening to on Spotify. Optionally, to get lyrics for a specific song, use "
-            "`$sl [song] ,, [artist]`. \nEg. `$sl In The End ,, Linkin Park`",
+            "`$sl song ,, artist`. \nEg. `$sl In The End ,, Linkin Park`",
             inline=False,
         )
         embed.add_field(name="`$invite` or `$topgg`", value="Link to the bot's top.gg page", inline=False)
@@ -74,70 +74,42 @@ class GeneralCommands(commands.Cog, name="General"):
         """
         log = Log(self.session)
 
-        async def send_lyrics():
-            lyrics = await get_lyrics(song, artists[0], self.session)
-            await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
-            split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
-            await log.add_sub_log("Split successfully. Packing into messages...")
-
-            await self.send_chunks(ctx, split_lyrics, song, artists_string)
-            await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
-            log.change_log_success_status(True)
-
         try:
 
             await log.add_log(f"User {ctx.author} from {ctx.guild or ctx.channel} guild requested lyrics")
 
             if not params:
-                raise NotEnoughArguments(
-                    "Due to Discord Intents update, we need to request access to Spotify data from Discord. "
-                    "Please specify song and artist until Discord enables it for us. Sorry for inconvenience!"
-                    " For usage, check `$help`"
-                )
-
-            try:
-                song, artists = (x.strip() for x in params.split(",,", 1))  # split on ,,
-            except ValueError:
-                raise NotEnoughArguments(
-                    "Please separate the song name and artist with 2 commas, "
-                    "like `$sl do I wanna know ,, arctic monkeys`. \n"
-                    "We think this is easier than the previous method :)"
-                )
-
-            if not (song or artists):
-                # if not member:
-                # await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
-                # song, artists = self.get_spotify_data(ctx.author)
-                # if member:
-                # song, artists = self.get_spotify_data(member)
-                # await log.add_sub_log(
-                # f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
-                # )
-                # elif artists is None:
-                raise NotEnoughArguments(
-                    "Due to Discord Intents update, we need to request access to Spotify data from Discord. "
-                    "Please specify song and artist until Discord enables it for us. Sorry for inconvenience!"
-                    " For usage, check `$help`"
-                )
-            elif not (song and artists):
-                raise NotEnoughArguments("Not enough arguments! For usage check $help")
+                if not member:
+                    await log.add_sub_log("Song data not provided, trying to fetch it automatically...")
+                    song, artists = self.get_spotify_data(ctx.author)
+                else:
+                    song, artists = self.get_spotify_data(member)
+                    await log.add_sub_log(
+                        f"Mentioned {member} & song data was not provided, trying to fetch it automatically..."
+                    )
             else:
-                tmp = artists
-                artists = list()
-                artists.append(tmp)
+                try:
+                    song, artists = (x.strip() for x in params.split(",,", 1))  # split on ,,
+                    if not (song and artists):
+                        raise NotEnoughArguments("Not enough arguments! For usage check $help")
+                except ValueError:
+                    raise NotEnoughArguments(
+                        "Please separate the song name and artist with 2 commas, "
+                        "like `$sl do I wanna know ,, arctic monkeys`."
+                    )
             artists_string = self.artists_to_string(artists)
             debug_string = f"Getting lyrics for {song} by {artists_string}"
             await log.add_sub_log(debug_string)
             await ctx.send(debug_string)
 
-            await send_lyrics()
-        except LyricsError as ex:
-            await log.add_sub_log(f"Error raised: {ex}", ConsoleColors.FAIL)
+            await self.send_lyrics(ctx, song, artists, log)
+        except LyricsError as e:
+            await log.add_sub_log(f"Error raised: {e}", ConsoleColors.FAIL)
             log.change_log_success_status(None)
-            await ctx.send(ex)
-        except Exception as ex:
-            await log.add_sub_log(f"Error: {ex}", ConsoleColors.FAIL, True)
-            print(traceback.print_exception(type(ex), ex, ex.__traceback__))
+            await ctx.send(e)
+        except Exception as e:
+            await log.add_sub_log(f"Error: {e}", ConsoleColors.FAIL, True)
+            print(traceback.print_exception(type(e), e, e.__traceback__))
             log.change_log_success_status(False)
             await ctx.send(
                 "There was an error while processing your request. Please try again in a few seconds. \n"
@@ -145,6 +117,16 @@ class GeneralCommands(commands.Cog, name="General"):
             )
         finally:
             await log.send_webhook()
+
+    async def send_lyrics(self, ctx, song, artists, log):
+        lyrics = await get_lyrics(song, artists[0], self.session)
+        await log.add_sub_log("Lyrics fetched successfully, splitting it into fields...")
+        split_lyrics = self.chop_string_into_chunks(lyrics, 1024)
+        await log.add_sub_log("Split successfully. Packing into messages...")
+
+        await self.send_chunks(ctx, split_lyrics, song, self.artists_to_string(artists))
+        await log.add_sub_log("Lyrics sent successfully.", ConsoleColors.OKGREEN)
+        log.change_log_success_status(True)
 
     async def send_chunks(self, ctx, chunks, song, artists):
         messages = self.pack_into_messages(chunks)
@@ -154,6 +136,7 @@ class GeneralCommands(commands.Cog, name="General"):
             embed.title = f"{song} by {artists}" if i == 0 else ""
             for chunk in message:
                 embed.add_field(name="\u200C", value=chunk, inline=False)
+            embed.set_footer(text="P.S. simply typing $sl works again!")
             await ctx.send(embed=embed)
             i += 1
 
@@ -180,9 +163,7 @@ class GeneralCommands(commands.Cog, name="General"):
         if len(artists) == 0:
             return ""
         str1 = artists[0]
-        for artist in artists:
-            if artist == str1:
-                continue
+        for artist in artists[1:]:
             str1 += ", " + artist
         return str1
 
