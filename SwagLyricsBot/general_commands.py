@@ -97,7 +97,7 @@ class GeneralCommands(commands.Cog, name="General"):
                         "Please separate the song name and artist with 2 commas, "
                         "like `$sl do I wanna know ,, arctic monkeys`."
                     )
-            if(not isinstance(artists, list)):
+            if not isinstance(artists, list):
                 artists = [artists]
             
             artists_string = self.artists_to_string(artists)
