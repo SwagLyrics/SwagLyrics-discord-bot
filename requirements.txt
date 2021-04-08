@@ -4,5 +4,5 @@ dblpy==0.4.0
 discord.py==1.7.1
 python-dotenv==0.17.0
 psutil==5.8.0
-swaglyrics==1.2.0
+swaglyrics==1.2.2
 aiocfscrape==1.0.0
