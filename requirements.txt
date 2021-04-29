@@ -1,5 +1,5 @@
 aiohttp[speedups]==3.7.4.post0
-beautifulsoup4==4.9.1
+beautifulsoup4==4.9.3
 dblpy==0.4.0
 discord.py==1.7.1
 python-dotenv==0.17.0
